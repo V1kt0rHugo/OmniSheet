@@ -1,0 +1,43 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Ficha {
+  id             String   @id @default(uuid())
+  nome           String   @default("")
+  epiteto        String   @default("")
+  campanha       String   @default("")
+  status         String   @default("Ativo")
+  resumo         String   @default("")
+  sistemaId      String
+  sistema        Sistema  @relation(fields: [sistemaId], references: [id])
+  dados          Json     @default("{}")
+  item           Json     @default("{}")
+  imagem         String?
+  foco           Int      @default(25)
+  cor            Int      @default(210)
+  demo           Boolean  @default(false)
+  criadoEm       DateTime @default(now())
+  atualizadoEm   DateTime @updatedAt
+
+  @@map("fichas")
+}
+
+/// Modelo de ficha de um sistema de RPG: `secoes` descreve os campos que o editor e a ficha mostram.
+model Sistema {
+  id           String   @id @default(uuid())
+  nome         String
+  descricao    String   @default("")
+  secoes       Json     @default("[]")
+  builtin      Boolean  @default(false)
+  criadoEm     DateTime @default(now())
+  atualizadoEm DateTime @updatedAt
+  fichas       Ficha[]
+
+  @@map("sistemas")
+}
