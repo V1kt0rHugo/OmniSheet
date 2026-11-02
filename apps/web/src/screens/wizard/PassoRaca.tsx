@@ -136,7 +136,7 @@ const RACAS_DATA: Record<string, RacaInfo> = {
       custo: '10 Mana',
       folego: '1 Fôlego',
       descricao:
-        'Molda armas com sangue/ferro: causam 40 dano base com chance de Hemorragia (5% do HP atual como dano verdadeiro).',
+        'Molda armas com sangue/ferro: causam 40 dano base com chance de Hemorragia (5% do HP atual do alvo como dano verdadeiro).',
     },
   },
   'Hollow': {
@@ -190,39 +190,102 @@ export function PassoRaca({ draft, setDado, sistema }: PassoRacaProps) {
     const efeitos = campoRaca?.efeitos?.[raca] || [];
 
     openModal(
-      <div className="mbox" style={{ width: 'min(540px, 95vw)', padding: '24px' }}>
-        {/* Banner no topo do modal */}
+      <div
+        className="mbox"
+        style={{
+          width: 'min(580px, 92vw)',
+          maxWidth: '580px',
+          boxSizing: 'border-box',
+          padding: '24px',
+          overflowX: 'hidden',
+          border: '1px solid rgba(216, 180, 106, 0.3)',
+          background: 'linear-gradient(180deg, #0e1224 0%, #080a16 100%)',
+          boxShadow: '0 12px 40px rgba(0,0,0,0.8), 0 0 30px rgba(216,180,106,0.1)',
+        }}
+      >
+        {/* Banner Ilustrado no Topo do Modal */}
         {extras?.imagem && (
           <div
             style={{
+              position: 'relative',
               width: '100%',
-              height: '220px',
+              height: '240px',
               borderRadius: '10px',
               overflow: 'hidden',
-              marginBottom: '16px',
-              background: '#04050a',
-              border: '1px solid rgba(255,255,255,0.1)',
+              marginBottom: '18px',
+              background: 'radial-gradient(ellipse at 50% 50%, rgba(30, 36, 70, 0.5) 0%, rgba(4, 5, 14, 0.98) 100%)',
+              border: '1px solid rgba(255,255,255,0.12)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '10px',
+              boxSizing: 'border-box',
             }}
           >
             <img
               src={extras.imagem}
               alt={raca}
-              style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 20%' }}
+              style={{
+                maxHeight: '100%',
+                maxWidth: '100%',
+                objectFit: 'contain',
+                filter: 'drop-shadow(0 6px 16px rgba(0,0,0,0.75))',
+              }}
             />
+            {racaSelecionada === raca && (
+              <span
+                className="ed-sys"
+                style={{
+                  position: 'absolute',
+                  top: '12px',
+                  right: '12px',
+                  background: 'rgba(8, 10, 20, 0.9)',
+                  backdropFilter: 'blur(4px)',
+                  margin: 0,
+                  fontSize: '11.5px',
+                  padding: '3px 10px',
+                }}
+              >
+                ✓ Selecionada
+              </span>
+            )}
           </div>
         )}
 
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '8px' }}>
-          <h3 style={{ margin: 0, fontFamily: 'var(--f-hk)', fontSize: '24px', color: 'var(--gold)' }}>
-            {raca}
+        {/* Título da Raça */}
+        <div style={{ marginBottom: '14px' }}>
+          <h3
+            style={{
+              margin: '0 0 4px',
+              fontFamily: 'var(--f-hk)',
+              fontSize: '26px',
+              fontWeight: 700,
+              letterSpacing: '0.04em',
+              color: 'var(--gold)',
+              textShadow: '0 2px 10px rgba(216,180,106,0.3)',
+            }}
+          >
+            {raca.toUpperCase()}
           </h3>
-          {racaSelecionada === raca && <span className="ed-sys">✓ Selecionada</span>}
+          <span style={{ fontSize: '12px', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+            Linhagem de Mouneteria
+          </span>
         </div>
 
-        {/* Status / Modificadores */}
+        {/* Modificadores de Atributos */}
         {efeitos.length > 0 && (
-          <div style={{ margin: '10px 0' }}>
-            <span style={{ fontSize: '11px', letterSpacing: '0.08em', color: 'var(--text-dim)', textTransform: 'uppercase', display: 'block', marginBottom: '4px' }}>
+          <div style={{ marginBottom: '16px' }}>
+            <span
+              style={{
+                fontSize: '11px',
+                letterSpacing: '0.1em',
+                color: 'var(--text-dim)',
+                textTransform: 'uppercase',
+                display: 'block',
+                marginBottom: '6px',
+                fontWeight: 600,
+              }}
+            >
               Modificadores de Atributos
             </span>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
@@ -233,10 +296,13 @@ export function PassoRaca({ draft, setDado, sistema }: PassoRacaProps) {
                     key={idx}
                     className="chip"
                     style={{
-                      borderColor: isPos ? 'rgba(127, 216, 166, 0.4)' : 'rgba(255, 157, 157, 0.4)',
+                      borderColor: isPos ? 'rgba(127, 216, 166, 0.45)' : 'rgba(255, 157, 157, 0.45)',
                       color: isPos ? '#7fd8a6' : '#ff9d9d',
-                      background: isPos ? 'rgba(127, 216, 166, 0.08)' : 'rgba(255, 157, 157, 0.08)',
+                      background: isPos ? 'rgba(127, 216, 166, 0.1)' : 'rgba(255, 157, 157, 0.1)',
                       fontSize: '12px',
+                      padding: '3px 10px',
+                      borderRadius: '6px',
+                      fontWeight: 500,
                     }}
                   >
                     {descreverEfeito(m, nomeDoCampo[m.campo] ?? m.campo)}
@@ -247,55 +313,143 @@ export function PassoRaca({ draft, setDado, sistema }: PassoRacaProps) {
           </div>
         )}
 
-        {/* Passivas */}
+        {/* Características Raciais */}
         {extras?.passivas && extras.passivas.length > 0 && (
-          <div style={{ margin: '12px 0' }}>
-            <span style={{ fontSize: '11px', letterSpacing: '0.08em', color: 'var(--text-dim)', textTransform: 'uppercase', display: 'block', marginBottom: '4px' }}>
+          <div style={{ marginBottom: '16px' }}>
+            <span
+              style={{
+                fontSize: '11px',
+                letterSpacing: '0.1em',
+                color: 'var(--text-dim)',
+                textTransform: 'uppercase',
+                display: 'block',
+                marginBottom: '6px',
+                fontWeight: 600,
+              }}
+            >
               Características Raciais
             </span>
-            {extras.passivas.map((p, idx) => (
-              <div key={idx} style={{ display: 'flex', gap: '6px', alignItems: 'baseline', fontSize: '13.5px', color: '#c3c9de', marginBottom: '4px' }}>
-                <span style={{ color: 'var(--gold)' }}>✦</span>
-                <span style={{ lineHeight: '1.4' }}>{p}</span>
-              </div>
-            ))}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+              {extras.passivas.map((p, idx) => (
+                <div
+                  key={idx}
+                  style={{
+                    display: 'flex',
+                    gap: '8px',
+                    alignItems: 'baseline',
+                    fontSize: '13px',
+                    color: '#c9cee0',
+                    lineHeight: '1.4',
+                  }}
+                >
+                  <span style={{ color: 'var(--gold)', fontSize: '11px' }}>✦</span>
+                  <span>{p}</span>
+                </div>
+              ))}
+            </div>
           </div>
         )}
 
-        {/* Habilidade Inicial */}
+        {/* Card de Habilidade Inicial */}
         {extras?.habilidadeInicial && (
-          <div className="carta" style={{ margin: '14px 0 6px', padding: '12px 14px', background: 'rgba(7,10,24,0.7)' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <b style={{ color: 'var(--gold)', fontSize: '14px' }}>{extras.habilidadeInicial.nome}</b>
-              <small style={{ color: 'var(--text-dim)', fontSize: '11px', textTransform: 'uppercase' }}>
-                {extras.habilidadeInicial.tipo}
-              </small>
+          <div
+            className="carta"
+            style={{
+              marginBottom: '20px',
+              padding: '14px 16px',
+              background: 'rgba(5, 7, 18, 0.75)',
+              border: '1px solid rgba(216, 180, 106, 0.2)',
+              borderRadius: '10px',
+              boxSizing: 'border-box',
+            }}
+          >
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                flexWrap: 'wrap',
+                gap: '8px',
+                marginBottom: '6px',
+              }}
+            >
+              <b style={{ color: 'var(--gold)', fontSize: '15px', fontFamily: 'var(--f-hk)', letterSpacing: '0.02em' }}>
+                {extras.habilidadeInicial.nome}
+              </b>
+              <span
+                style={{
+                  fontSize: '10.5px',
+                  letterSpacing: '0.08em',
+                  padding: '2px 8px',
+                  borderRadius: '4px',
+                  background: 'rgba(216, 180, 106, 0.12)',
+                  border: '1px solid rgba(216, 180, 106, 0.3)',
+                  color: 'var(--gold)',
+                  textTransform: 'uppercase',
+                  fontWeight: 600,
+                }}
+              >
+                Habilidade Inicial · {extras.habilidadeInicial.tipo}
+              </span>
             </div>
-            <div style={{ display: 'flex', gap: '8px', margin: '4px 0 6px', fontSize: '12px', color: 'var(--text-dim)' }}>
-              <span style={{ color: 'var(--gold)' }}>{extras.habilidadeInicial.custo}</span>
-              {extras.habilidadeInicial.folego && <span>· {extras.habilidadeInicial.folego}</span>}
-              {extras.habilidadeInicial.cd && <span>· CD {extras.habilidadeInicial.cd}</span>}
+
+            {/* Custos e Recarga */}
+            <div
+              style={{
+                display: 'flex',
+                gap: '8px',
+                alignItems: 'center',
+                margin: '6px 0 8px',
+                fontSize: '12px',
+                color: 'var(--text-dim)',
+                flexWrap: 'wrap',
+              }}
+            >
+              <span style={{ color: '#93c5fd', fontWeight: 500 }}>{extras.habilidadeInicial.custo}</span>
+              {extras.habilidadeInicial.folego && (
+                <>
+                  <span style={{ opacity: 0.5 }}>·</span>
+                  <span>{extras.habilidadeInicial.folego}</span>
+                </>
+              )}
+              {extras.habilidadeInicial.cd && (
+                <>
+                  <span style={{ opacity: 0.5 }}>·</span>
+                  <span style={{ color: '#e2e8f0' }}>CD {extras.habilidadeInicial.cd}</span>
+                </>
+              )}
             </div>
-            <p style={{ margin: 0, fontSize: '13px', color: '#b9bfd4', lineHeight: '1.45' }}>
+
+            <p style={{ margin: 0, fontSize: '12.5px', color: '#b9bfd4', lineHeight: '1.5' }}>
               {extras.habilidadeInicial.descricao}
             </p>
           </div>
         )}
 
-        {/* Botões do modal */}
-        <div className="mrow" style={{ marginTop: '20px' }}>
-          <button type="button" className="btn subtle" onClick={closeModal}>
+        {/* Rodapé do Modal com Botões Alinhados */}
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'flex-end',
+            gap: '12px',
+            paddingTop: '16px',
+            borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+            boxSizing: 'border-box',
+          }}
+        >
+          <button type="button" className="btn subtle" onClick={closeModal} style={{ padding: '8px 18px' }}>
             Fechar
           </button>
           <button
             type="button"
             className="btn primary"
+            style={{ padding: '8px 22px', fontWeight: 600 }}
             onClick={() => {
               selecionarRaca(raca);
               closeModal();
             }}
           >
-            {racaSelecionada === raca ? 'Já selecionada' : 'Selecionar ' + raca}
+            {racaSelecionada === raca ? '✓ Já selecionada' : 'Selecionar ' + raca}
           </button>
         </div>
       </div>
@@ -305,9 +459,55 @@ export function PassoRaca({ draft, setDado, sistema }: PassoRacaProps) {
   return (
     <div className="wiz-step-wrap">
       <div className="sys-wrap" style={{ maxWidth: '1280px', margin: '0 auto' }}>
-        <p className="sys-lead" style={{ maxWidth: '80ch', margin: '0 0 20px', fontSize: '14px' }}>
-          Passe o mouse sobre os cards para ver detalhes completos ou escolher sua raça.
-        </p>
+        {/* Cabeçalho Destacado "RAÇAS" */}
+        <div
+          style={{
+            marginBottom: '26px',
+            paddingBottom: '16px',
+            borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'baseline', gap: '14px', flexWrap: 'wrap' }}>
+            <h1
+              style={{
+                margin: 0,
+                fontFamily: 'var(--f-hk)',
+                fontSize: 'clamp(32px, 3.8vw, 44px)',
+                fontWeight: 700,
+                letterSpacing: '0.08em',
+                color: '#fff',
+                textShadow: '0 2px 18px rgba(216, 180, 106, 0.35)',
+                lineHeight: 1.1,
+              }}
+            >
+              RAÇAS
+            </h1>
+            <span
+              className="ed-sys"
+              style={{
+                fontSize: '12.5px',
+                fontWeight: 500,
+                padding: '2px 10px',
+                background: 'rgba(216, 180, 106, 0.08)',
+              }}
+            >
+              {opcoes.length} linhagens disponíveis
+            </span>
+          </div>
+
+          <p
+            className="sys-lead"
+            style={{
+              margin: '8px 0 0',
+              fontSize: '14.5px',
+              color: '#b9bfd4',
+              maxWidth: '82ch',
+              lineHeight: 1.55,
+            }}
+          >
+            Escolha a ancestralidade do seu personagem. Cada linhagem molda seus atributos, concede dádivas passivas e define sua técnica inicial de combate.
+          </p>
+        </div>
 
         {/* Grade de Cards Verticais */}
         <div
@@ -324,7 +524,7 @@ export function PassoRaca({ draft, setDado, sistema }: PassoRacaProps) {
             const extras = RACAS_DATA[opcao];
             const efeitos = campoRaca?.efeitos?.[opcao] || [];
 
-            // Resumo de status conciso (ex.: "+2 Força, -1 Destreza")
+            // Resumo de status conciso
             const statusResumo = efeitos
               .map((m) => descreverEfeito(m, nomeDoCampo[m.campo] ?? m.campo))
               .join(', ');
@@ -436,7 +636,7 @@ export function PassoRaca({ draft, setDado, sistema }: PassoRacaProps) {
                         fontSize: '11px',
                         fontWeight: 600,
                         letterSpacing: '0.06em',
-                        color: '#93c5fd', // tom azulado suave como na imagem de referência
+                        color: '#93c5fd',
                         textTransform: 'uppercase',
                         margin: '2px 0',
                       }}
