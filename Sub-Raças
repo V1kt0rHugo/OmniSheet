@@ -1,0 +1,194 @@
+Sub-raças
+Sub-raças são raças privilegiadas, essas sub-raças sobrepõem as raças normais então não se pode ter as 2 somente 1, para conseguir escolher uma sub-raça é preciso rolar um 2d20 escrito “raça” e dependendo do dado que cair vc irá poder pegar raças do seu dado para inferior
+Exemplo: “d20 raça”=15, vc vai poder pegar raças de requisito de dado 15 para baixo.
+
+Meio demônio
+Imagem : https://mouneteria.netlify.app/img/a-meiodemonio.webp
++4 Força
++2 Eter
+-2 Intelecto
++2 Vigor
+Arte de Meio demônio
+dado: 10.
+Meio demônios ganham +4 em Força +2 em Vigor, Eter -2 Intelecto.
+Dano arcano não dá dano adicional nessa raça.
+Inicia com a habilidade: Se impor.
+Se impor:
+Você irá bater o pé no chão e liberar toda sua presença demoníaca e ao fazer isso irá aplicar “medo” em área, “medo” faz com que o inimigo cause 20 pontos a menos de dano em você durante 2 turnos.
+Custo: 20 de mana.
+Folego:1
+Skill ativa.
+
+Meio Vampiro
+Imagem : https://mouneteria.netlify.app/img/a-meiovampiro.webp
++3 Força
+-2 Destreza
++3 Eter
++2 Intelecto
+Arte de Meio Vampiro
+Dado: 12.
+Meio vampiro ganha +3 de Força, +3 de Eter, +2 Intelecto, -2 de Destreza.
+0 Necessidade de beber sangue, em troca não se cura ao consumir.
+Inicia com a habilidade: Disparo.
+Disparo:
+Ao juntar suas duas mãos vc cria sangue mágico e pelo freixo de seus dedos vai sair um disparo extremamente rápido de sangue, ao acertar 3 vezes causa hemorragia leve no inimigo.
+Dano: 10 base + seu dano mágico.
+Dano da hemorragia: 30 de dano verdadeiro.
+
+Custo: 16 de mana.
+Folego:1
+Skill ativa.
+
+Orc humano
+Imagem : https://mouneteria.netlify.app/img/a-orchumano.webp
++4 Força
+-2 Eter
+-2 Intelecto
++2 Agilidade
++4 Vigor
+Arte de Orc humano
+Dado: 12.
+Orc.H ganham +4 em força e vigor, +2 de agilidade, -2 de Eter, Intelecto.
+Essa raça mista começa com uma defesa base física alta, inicia com 10 de redução de dano físico base.
+Inicia com a habilidade: Brutalidade.
+Brutalidade:
+A cada turno que se passa em batalha você vai ganhar +1 bônus em todos seus dados de batalha até um máximo de 3.
+Custo por Turno:5 de hp.
+Folego:0.
+Skill passiva ativa.
+
+Clérigo
+Imagem : https://mouneteria.netlify.app/img/a-clerigo.webp
++3 Força
++3 Eter
+-3 Agilidade
++3 Vigor
+Arte de Clérigo
+Dado: 08.
+Clérigos ganham +3 em Eter, Vigor, Força e -3 Agilidade
+Clérigos podem escolher uma divindade e uma benção.
+Inicia com a habilidade: Conceda-me força.
+Conceda-me força:
+Essa skill cria um escudo magico envolta de vc e seus aliados.
+(10 de shield + seus pontos de vigor)
+Custo: 10 de mana por pessoa.
+Folego:1.
+Skill ativa.
+
+Benções
+
+Veja os deuses e as bênçãos em Deuses.
+
+Costurado
+Imagem : https://mouneteria.netlify.app/img/a-costurado.webp
++3 Destreza
++1 Eter
++3 Agilidade
+-1 Vigor
+Arte de Costurado
+Dado: 12.
+Ganham +3 de Agilidade e Destreza, +1 em Eter. -1 Vigor.
+Ter deformação ou machucados pelo corpo (Obrigatório)
+Iniciam com a habilidade: Sem mais dor.
+Sem mais dor:
+ao chegar em 2/4 de hp vc receber um escudo equivalente a 1/4 da sua vida máxima e ele vai durar até que destruam ele.
+
+Folego:0.
+Skill Passiva.
+
+Kitsune
+Imagem : https://mouneteria.netlify.app/img/a-kitsune.webp
+-3 Força
+-3 Destreza
++7 Eter
++7 Intelecto
+-3 Agilidade
++1 Vigor
+Arte de Kitsune
+Dado: 16.
+Ganham +7 em Eter é Intelecto,+1 Vigor -3 em todo restante
+Regenera mana 1.3x mais rápido.
+Inicia com a habilidade: Entre a morte há esperança.
+Entre a morte há esperança:
+toda vez que vê algo morto pode estudar todas suas propriedades e rolar um dado de aprendizagem para aprender algo com o espirito daquilo que já se foi (até 48hrs, skills de transformação, classe e raça não podem ser adquiridas).
+Skill passiva.
+
+Fada
+Imagen : https://mouneteria.netlify.app/img/a-fada.webp
+-7 Força
++6 Eter
++6 Intelecto
+Arte de Fada
+Dado: 10.
+Fadas ganham +6 em Intelecto e Eter, -7 força.
+Tamanho máximo de uma fada será de 30 Cm.
+Inicia com a habilidade: Zen.
+Zen:
+fadas recuperam 5 pontos de mana passivamente em seu turno.
+
+Humano mágico
+Imagem: https://mouneteria.netlify.app/img/a-humanomagico.webp
+-1 Força
+-1 Destreza
++3 Eter
++3 Intelecto
+-1 Agilidade
++3 Vigor
+Arte de Humano mágico
+Dado: 13.
+Humanos Mágico ganham +3 Intelecto, Eter, Vigor -1 em todos status restantes.
+Recebe resistência mágica base que evolui com o player, inicia anulando 7 de dano mágico a cada 15 Níveis.
+Inicia com a habilidade: Criatividade.
+Criatividade:
+sacrifica 20 pontos de mana (imutável) para ter sucesso garantido nós próximos 2 dados de intelecto, estratégia e ganha +5 Bônus em dados de aprendizagem.
+Folego:0.
+Skill ativa.
+
+Gigante combatente
+Imagem : https://mouneteria.netlify.app/img/a-gigantecombatente.webp
++3 Destreza
++3 Eter
+-4 Intelecto
++4 Vigor
+Arte de Gigante combatente
+Dado: 12.
+Gigantes combatentes ganham +4 em vigor, +3 em Destreza e Eter, -4 Intelecto.
+Sua alma foi trocada por um núcleo adicional que te mantem vivo. te tornando Imune a dano Verdadeiro.
+Iniciam com a habilidade: Repelir.
+Repelir:
+seu corpo cria espinhos de forma temporária, 1/4 do dano corpo a corpo sofrido se voltará contra o atacante, Recebe metade do dano de projeteis pontiagudos.
+Skill ativa.
+
+Meio besta
+Imagem : https://mouneteria.netlify.app/img/a-meiobesta.webp
++4 Força
+-4 Destreza
+-4 Intelecto
++3 Agilidade
++3 Vigor
+Arte de Meio besta
+Dado: 16
+Monstros ganham +4 em Força,+3 em Agilidade e Vigor,-4 Intelecto, Destreza.
+Customize seu personagem:
+Customização:
+
+Mamíferos
+Repteis
+insectoides
+
+Ghost walker
+Imagen : https://mouneteria.netlify.app/img/a-ghostwalker.webp
++4 Força
+-3 Destreza
++3 Eter
++2 Vigor
+Arte de Ghost walker
+Dado: 11.
+Ganham +4 em Força,+3 em Eter, +2 em Vigor, -3 em Destreza.
+Apto a magias do tipo “Morte”
+Inicia com a habilidade: Dash sombrio.
+Dash sombrio:
+Você pode se teletransportar pra qualquer sombra em um raio de 35M
+Custo: 16 mana.
+CD: 2 turnos de recarga.
+Folego:1.
