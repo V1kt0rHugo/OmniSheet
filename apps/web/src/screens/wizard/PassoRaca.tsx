@@ -2,7 +2,6 @@ import { useState } from 'react';
 import type { FichaDraft, Sistema, Dados } from '../../types';
 import { descreverEfeito } from '../../lib/calculo';
 import { camposDe } from '../../lib/sistema';
-import { useApp } from '../../app/AppContext';
 import { sfx } from '../../lib/sfx';
 
 export interface PassoRacaProps {
@@ -305,8 +304,8 @@ const RACAS_DETALHADAS: Record<string, RacaCompleta> = {
 };
 
 export function PassoRaca({ draft, setDado, sistema }: PassoRacaProps) {
-  const { openModal, closeModal } = useApp();
   const [hoveredRaca, setHoveredRaca] = useState<string | null>(null);
+  const [racaDetalhada, setRacaDetalhada] = useState<string | null>(null);
 
   const campos = camposDe(sistema);
   const campoRaca = campos.find((c) => c.id === 'raca' && c.tipo === 'selecao');
@@ -323,49 +322,66 @@ export function PassoRaca({ draft, setDado, sistema }: PassoRacaProps) {
     setDado('raca', raca);
   };
 
-  // Abre a tela cinematográfica de detalhes inspirada exatamente na referência
-  const abrirModalDetalhes = (raca: string) => {
-    const data = RACAS_DETALHADAS[raca] || {
-      nome: raca,
+  // Se o usuário clicou em "Ver detalhes", renderiza a Tela de Apresentação Cinematográfica Completa
+  if (racaDetalhada) {
+    const data = RACAS_DETALHADAS[racaDetalhada] || {
+      nome: racaDetalhada,
       imagem: '',
       statusLinha: '',
       topicos: [],
       habilidadeResumo: '',
     };
+    const isSelected = racaSelecionada === racaDetalhada;
 
-    openModal(
+    return (
       <div
+        className="wiz-detalhes-fullscreen"
         style={{
-          width: 'min(940px, 94vw)',
-          maxHeight: '92vh',
-          overflowY: 'auto',
-          overflowX: 'hidden',
-          background: 'radial-gradient(circle at 75% 20%, #151a32 0%, #0a0d1d 50%, #05060e 100%)',
-          border: '1.5px solid rgba(216, 180, 106, 0.35)',
-          borderRadius: '16px',
-          boxShadow: '0 20px 50px rgba(0,0,0,0.85), 0 0 35px rgba(216, 180, 106, 0.15)',
-          padding: 'clamp(20px, 3.5vw, 36px)',
+          width: '100%',
+          maxWidth: '1120px',
+          margin: '0 auto',
+          padding: '10px 0 30px',
+          animation: 'fadeIn 0.25s ease',
           boxSizing: 'border-box',
-          position: 'relative',
         }}
       >
-        {/* PARTE SUPERIOR: 2 COLUNAS (TEXTO À ESQUERDA, RETRATO À DIREITA) */}
+        {/* Barra superior de retorno */}
+        <div style={{ marginBottom: '24px' }}>
+          <button
+            type="button"
+            className="btn subtle"
+            style={{
+              padding: '8px 18px',
+              fontSize: '14px',
+              borderRadius: '8px',
+              border: '1px solid rgba(255,255,255,0.15)',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '6px',
+            }}
+            onClick={() => setRacaDetalhada(null)}
+          >
+            ← Voltar para todas as raças
+          </button>
+        </div>
+
+        {/* PARTE SUPERIOR: TEXTOS GRANDES À ESQUERDA, RETRATO IMPONENTE À DIREITA */}
         <div
           style={{
             display: 'grid',
             gridTemplateColumns: 'minmax(0, 1fr) auto',
-            gap: 'clamp(20px, 4vw, 40px)',
+            gap: 'clamp(24px, 5vw, 60px)',
             alignItems: 'center',
-            marginBottom: '28px',
+            marginBottom: '32px',
           }}
         >
-          {/* Lado Esquerdo: "Raça", NOME GIGANTE e Status na horizontal */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+          {/* Lado Esquerdo */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
             <span
               style={{
                 fontFamily: 'var(--f-hk-body)',
                 fontStyle: 'italic',
-                fontSize: '22px',
+                fontSize: '28px',
                 color: 'var(--gold)',
                 letterSpacing: '0.04em',
                 lineHeight: 1,
@@ -374,28 +390,28 @@ export function PassoRaca({ draft, setDado, sistema }: PassoRacaProps) {
               Raça
             </span>
 
-            <h2
+            <h1
               style={{
-                margin: '2px 0 10px',
+                margin: '2px 0 16px',
                 fontFamily: 'var(--f-hk)',
-                fontSize: 'clamp(38px, 5.5vw, 68px)',
+                fontSize: 'clamp(44px, 6.5vw, 78px)',
                 fontWeight: 700,
                 letterSpacing: '0.06em',
                 color: '#ffffff',
-                textShadow: '0 4px 20px rgba(255, 255, 255, 0.25), 0 0 30px rgba(216, 180, 106, 0.3)',
+                textShadow: '0 4px 25px rgba(255, 255, 255, 0.25), 0 0 35px rgba(216, 180, 106, 0.35)',
                 lineHeight: 1.05,
               }}
             >
               {data.nome.toUpperCase()}
-            </h2>
+            </h1>
 
             {/* Linha de Status em destaque (ex.: +2 DESTREZA   +1 ETER   +2 AGILIDADE) */}
             <div
               style={{
                 display: 'flex',
                 flexWrap: 'wrap',
-                gap: '14px',
-                fontSize: '13px',
+                gap: '16px',
+                fontSize: '15px',
                 fontWeight: 600,
                 letterSpacing: '0.12em',
                 color: '#e2e8f0',
@@ -408,7 +424,7 @@ export function PassoRaca({ draft, setDado, sistema }: PassoRacaProps) {
                   key={i}
                   style={{
                     color: st.startsWith('-') ? '#fca5a5' : '#7fd8a6',
-                    textShadow: '0 0 8px rgba(0,0,0,0.5)',
+                    textShadow: '0 0 10px rgba(0,0,0,0.6)',
                   }}
                 >
                   {st}
@@ -417,16 +433,16 @@ export function PassoRaca({ draft, setDado, sistema }: PassoRacaProps) {
             </div>
           </div>
 
-          {/* Lado Direito: Retrato Vertical do Personagem emoldurado */}
+          {/* Lado Direito: Retrato Vertical do Personagem (Grande e sem cortes) */}
           {data.imagem && (
             <div
               style={{
-                width: 'clamp(200px, 26vw, 290px)',
-                height: 'clamp(280px, 36vw, 390px)',
-                borderRadius: '12px',
+                width: 'clamp(240px, 28vw, 340px)',
+                height: 'clamp(330px, 38vw, 460px)',
+                borderRadius: '16px',
                 overflow: 'hidden',
-                border: '2px solid rgba(139, 92, 246, 0.4)',
-                boxShadow: '0 8px 30px rgba(0,0,0,0.8), 0 0 25px rgba(139, 92, 246, 0.2)',
+                border: '2px solid rgba(139, 92, 246, 0.5)',
+                boxShadow: '0 12px 40px rgba(0,0,0,0.85), 0 0 35px rgba(139, 92, 246, 0.25)',
                 background: '#04050a',
                 flexShrink: 0,
               }}
@@ -452,10 +468,10 @@ export function PassoRaca({ draft, setDado, sistema }: PassoRacaProps) {
             position: 'relative',
             background: 'rgba(8, 10, 22, 0.75)',
             border: '1px solid rgba(255, 255, 255, 0.1)',
-            borderRadius: '6px',
-            padding: '24px 28px',
+            borderRadius: '8px',
+            padding: '30px 34px',
             boxSizing: 'border-box',
-            marginBottom: '24px',
+            marginBottom: '32px',
           }}
         >
           {/* Detalhe de cantoneira angular superior esquerda: ┌ */}
@@ -464,8 +480,8 @@ export function PassoRaca({ draft, setDado, sistema }: PassoRacaProps) {
               position: 'absolute',
               top: '-1px',
               left: '-1px',
-              width: '12px',
-              height: '12px',
+              width: '16px',
+              height: '16px',
               borderTop: '2px solid #818cf8',
               borderLeft: '2px solid #818cf8',
             }}
@@ -477,37 +493,37 @@ export function PassoRaca({ draft, setDado, sistema }: PassoRacaProps) {
               position: 'absolute',
               bottom: '-1px',
               right: '-1px',
-              width: '12px',
-              height: '12px',
+              width: '16px',
+              height: '16px',
               borderBottom: '2px solid #818cf8',
               borderRight: '2px solid #818cf8',
             }}
           />
 
-          {/* Lista de tópicos com bullet ◆ */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+          {/* Lista de tópicos com bullet ◆ em fonte grande e legível */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             {data.topicos.map((top, idx) => (
-              <div key={idx} style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
+              <div key={idx} style={{ display: 'flex', gap: '14px', alignItems: 'flex-start' }}>
                 <span
                   style={{
-                    color: '#2dd4bf', // Verde-água ciano vibrante exatamente como na referência
-                    fontSize: '13px',
-                    lineHeight: '1.6',
+                    color: '#2dd4bf',
+                    fontSize: '15px',
+                    lineHeight: '1.65',
                     flexShrink: 0,
                   }}
                 >
                   ◆
                 </span>
 
-                <div style={{ fontSize: '14.5px', color: '#d1d5db', lineHeight: '1.6' }}>
+                <div style={{ fontSize: '16px', color: '#d1d5db', lineHeight: '1.65' }}>
                   {top.titulo && (
-                    <strong style={{ color: '#f3f4f6', display: 'block', marginBottom: '2px' }}>
+                    <strong style={{ color: '#f3f4f6', display: 'block', marginBottom: '4px' }}>
                       {top.titulo}
                     </strong>
                   )}
                   {Array.isArray(top.conteudo) ? (
                     top.conteudo.map((linha, liIdx) => (
-                      <p key={liIdx} style={{ margin: liIdx > 0 ? '4px 0 0' : 0 }}>
+                      <p key={liIdx} style={{ margin: liIdx > 0 ? '6px 0 0' : 0 }}>
                         {linha}
                       </p>
                     ))
@@ -520,50 +536,52 @@ export function PassoRaca({ draft, setDado, sistema }: PassoRacaProps) {
           </div>
         </div>
 
-        {/* BARRA DE AÇÕES NO RODAPÉ DO MODAL */}
+        {/* BARRA DE AÇÕES NO RODAPÉ */}
         <div
           style={{
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
-            paddingTop: '8px',
+            paddingTop: '12px',
+            borderTop: '1px solid rgba(255, 255, 255, 0.08)',
           }}
         >
           <button
             type="button"
             className="btn subtle"
             style={{
-              padding: '10px 22px',
-              fontSize: '14px',
+              padding: '12px 26px',
+              fontSize: '15px',
               borderRadius: '8px',
-              border: '1px solid rgba(255,255,255,0.15)',
+              border: '1px solid rgba(255,255,255,0.18)',
             }}
-            onClick={closeModal}
+            onClick={() => setRacaDetalhada(null)}
           >
-            ← Voltar
+            ← Voltar para a lista
           </button>
 
           <button
             type="button"
             className="btn primary"
             style={{
-              padding: '10px 28px',
-              fontSize: '15px',
+              padding: '12px 34px',
+              fontSize: '16px',
               fontWeight: 600,
               borderRadius: '8px',
             }}
             onClick={() => {
-              selecionarRaca(raca);
-              closeModal();
+              selecionarRaca(racaDetalhada);
+              setRacaDetalhada(null);
             }}
           >
-            {racaSelecionada === raca ? '✓ Raça já selecionada' : 'Selecionar ' + raca}
+            {isSelected ? '✓ Raça já selecionada (Concluir)' : 'Selecionar ' + racaDetalhada}
           </button>
         </div>
       </div>
     );
-  };
+  }
 
+  // Visualização normal: Lista de Cards
   return (
     <div className="wiz-step-wrap">
       <div className="sys-wrap" style={{ maxWidth: '1280px', margin: '0 auto' }}>
@@ -796,7 +814,7 @@ export function PassoRaca({ draft, setDado, sistema }: PassoRacaProps) {
                       }}
                       onClick={(e) => {
                         e.stopPropagation();
-                        abrirModalDetalhes(opcao);
+                        setRacaDetalhada(opcao);
                       }}
                     >
                       Ver detalhes
