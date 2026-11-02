@@ -11,158 +11,296 @@ export interface PassoRacaProps {
   sistema: Sistema;
 }
 
-interface RacaInfo {
-  imagem: string;
-  passivas: string[];
-  habilidadeInicial: {
-    nome: string;
-    tipo: 'Ativa' | 'Passiva';
-    custo: string;
-    folego?: string;
-    cd?: string;
-    descricao: string;
-  };
+interface TopicoDetalhe {
+  titulo?: string;
+  conteudo: string | string[];
 }
 
-const RACAS_DATA: Record<string, RacaInfo> = {
+interface RacaCompleta {
+  nome: string;
+  imagem: string;
+  statusLinha: string;
+  topicos: TopicoDetalhe[];
+  habilidadeResumo: string;
+}
+
+const RACAS_DETALHADAS: Record<string, RacaCompleta> = {
   'Meio Dragão': {
+    nome: 'Meio Dragão',
     imagem: 'https://mouneteria.netlify.app/img/a-meiodragao.webp',
-    passivas: ['Causa +1.10x de dano Éter.'],
-    habilidadeInicial: {
-      nome: 'Sopro amaldiçoado',
-      tipo: 'Ativa',
-      custo: '20 Mana',
-      folego: '1 Fôlego',
-      cd: '3 turnos',
-      descricao:
-        'Puxa todo o ar do pulmão e dispara uma rajada de fogo roxo: 30 dano mágico base + seu dano mágico. Causa "Enfraquecimento" (-10 dano e -8 armadura por 1 turno).',
-    },
+    statusLinha: '+2 FORÇA   -1 DESTREZA   +1 ÉTER   +1 AGILIDADE   +2 VIGOR',
+    habilidadeResumo: 'SOPRO AMALDIÇOADO',
+    topicos: [
+      {
+        conteudo: 'Meio Dragões recebem +2 em Força e Vigor, +1 em Éter e Agilidade, e -1 em Destreza.',
+      },
+      {
+        conteudo: 'Causa +1.10x de dano de Éter em todos os seus golpes e feitiços.',
+      },
+      {
+        conteudo: 'Inicia com a habilidade: Sopro amaldiçoado.',
+      },
+      {
+        titulo: 'Sopro amaldiçoado:',
+        conteudo: [
+          'Você irá puxar todo o ar do seu pulmão e vai disparar uma rajada de fogo roxo, o inimigo vai tomar (30 dano mágico base + seu dano mágico) e causará um debuff de "Enfraquecimento" reduzindo o dano em 10 e sua armadura em 8 por 1 turno.',
+          'Custo: 20 Mana · Fôlego: 1 · CD: 3 turnos · Skill ativa.',
+        ],
+      },
+    ],
   },
+
   'Elfo': {
+    nome: 'Elfo',
     imagem: 'https://mouneteria.netlify.app/img/a-elfo.webp',
-    passivas: [
-      'Em campo de batalha conhecido de forma abrangente, recebe +2 de bônus em todos os dados de combate.',
+    statusLinha: '+2 DESTREZA   +1 ÉTER   +2 AGILIDADE',
+    habilidadeResumo: 'PONTARIA',
+    topicos: [
+      {
+        conteudo: 'Elfos ganham +2 em Destreza e Agilidade, e +1 em Éter.',
+      },
+      {
+        conteudo:
+          'Enquanto está em um campo de batalha conhecido de forma abrangente, recebe +2 bônus em todos os dados de combate.',
+      },
+      {
+        conteudo: 'Inicia com a habilidade: Pontaria.',
+      },
+      {
+        titulo: 'Pontaria:',
+        conteudo: [
+          'Passivamente todos seus golpes a distância duplicam o raio de acerto e também seus recursos gastos caso seja uma magia será reduzido em 1.33x do custo de mana.',
+          'Skill passiva.',
+        ],
+      },
     ],
-    habilidadeInicial: {
-      nome: 'Pontaria',
-      tipo: 'Passiva',
-      custo: 'Passiva',
-      descricao:
-        'Passivamente duplica o raio de acerto de todos os golpes à distância. Gastos de recursos mágicos têm custo reduzido em 1.33x de Mana.',
-    },
   },
+
   'Gigante': {
+    nome: 'Gigante',
     imagem: 'https://mouneteria.netlify.app/img/a-gigante.webp',
-    passivas: ['Constituição colossal e alta resistência titânica.'],
-    habilidadeInicial: {
-      nome: 'Refletir',
-      tipo: 'Ativa',
-      custo: '20 Mana / pessoa',
-      folego: '1 Fôlego',
-      descricao:
-        'Invoca esfera protetora envolta de si e de até 3 aliados que absorve 1/4 do dano total recebido durante 2 turnos.',
-    },
+    statusLinha: '+3 FORÇA   +3 VIGOR   -1 AGILIDADE',
+    habilidadeResumo: 'REFLETIR',
+    topicos: [
+      {
+        conteudo: 'Gigantes recebem +3 em Força, +3 em Vigor e -1 em Agilidade devido ao seu porte imenso.',
+      },
+      {
+        conteudo: 'Constituição colossal com alta resistência a impactos físicos.',
+      },
+      {
+        conteudo: 'Inicia com a habilidade: Refletir.',
+      },
+      {
+        titulo: 'Refletir (Skill ativa):',
+        conteudo: [
+          'Invoca uma esfera protetora envolta de si e de seus aliados (Max 3) que vai proteger 1/4x do dano recebido por 2 turnos.',
+          'Custo: 20 de MP por pessoa · Fôlego: 1 · Skill ativa.',
+        ],
+      },
+    ],
   },
+
   'Humano': {
+    nome: 'Humano',
     imagem: 'https://mouneteria.netlify.app/img/a-humano.webp',
-    passivas: ['Adaptabilidade: Recebe +3 de bônus em testes de aprendizagem.'],
-    habilidadeInicial: {
-      nome: 'Genialidade',
-      tipo: 'Ativa',
-      custo: '15 HP',
-      folego: '0 Fôlego',
-      descricao:
-        'Epifania mental: rolagens de estratégia ou intelecto recebem buff de +8 adicional pelos próximos 3 dados.',
-    },
+    statusLinha: '+1 FORÇA   +1 DESTREZA   -4 ÉTER   +5 INTELECTO   +1 AGILIDADE   +1 VIGOR',
+    habilidadeResumo: 'GENIALIDADE',
+    topicos: [
+      {
+        conteudo:
+          'Arte de Humano: ganham +1 em todos os status exceto Éter e Intelecto (+5 Intelecto, -4 em Éter).',
+      },
+      {
+        conteudo: 'Adaptabilidade: Recebe +3 em testes de aprendizagem.',
+      },
+      {
+        conteudo: 'Inicia com a habilidade: Genialidade.',
+      },
+      {
+        titulo: 'Genialidade (Skill ativa):',
+        conteudo: [
+          'Entra em uma epifania mental e faz com que qualquer dado de estratégia ou intelecto recebam um buff de +8 adicional pelos próximos 3 dados.',
+          'Custo: 15 de HP · Fôlego: 0 · Skill ativa.',
+        ],
+      },
+    ],
   },
+
   'Goblin': {
+    nome: 'Goblin',
     imagem: 'https://mouneteria.netlify.app/img/a-goblin.webp',
-    passivas: ['No escuro se camufla completamente após ficar 1 turno sem atacar.'],
-    habilidadeInicial: {
-      nome: 'Furto',
-      tipo: 'Ativa',
-      custo: '15 Mana',
-      folego: '1 Fôlego',
-      descricao:
-        'Surrupia magicamente um item aleatório do alvo. Quanto maior o dado rolado, mais valioso o item (Dado base: d20+2).',
-    },
+    statusLinha: '+3 DESTREZA   +3 AGILIDADE   -1 INTELECTO',
+    habilidadeResumo: 'FURTO',
+    topicos: [
+      {
+        conteudo: 'Goblins recebem +3 em Agilidade, +3 em Destreza e -1 em Intelecto.',
+      },
+      {
+        conteudo: 'No escuro se camufla completamente após ficar 1 turno sem atacar.',
+      },
+      {
+        conteudo: 'Iniciam com a habilidade: Furto.',
+      },
+      {
+        titulo: 'Furto (Skill ativa):',
+        conteudo: [
+          'Faz com que o indivíduo magicamente roube alguma coisa aleatória de seu alvo; quão maior seu dado for melhor o item que pode ser roubado.',
+          'Custo: 15 de mana · Fôlego: 1 · Dado único que evolui com a skill: d20+2 · Skill ativa.',
+        ],
+      },
+    ],
   },
+
   'Prisioneiro': {
+    nome: 'Prisioneiro',
     imagem: 'https://mouneteria.netlify.app/img/a-prisioneiro.webp',
-    passivas: ['Sanidade máxima limitada a 80.'],
-    habilidadeInicial: {
-      nome: 'Determinação',
-      tipo: 'Passiva',
-      custo: 'Passiva',
-      descricao:
-        'Ao sofrer golpe fatal que zeraria sua vida, resiste com 1 de HP. Recarrega assim que a vida for restaurada ao máximo.',
-    },
+    statusLinha: '+1 DESTREZA   +3 ÉTER   -1 INTELECTO   +3 VIGOR',
+    habilidadeResumo: 'DETERMINAÇÃO',
+    topicos: [
+      {
+        conteudo: 'Prisioneiros recebem +3 em Vigor e Éter, +1 em Destreza e -1 em Intelecto.',
+      },
+      {
+        conteudo: 'Penalidade mental: o máximo de sanidade que se pode ter é limitado a 80.',
+      },
+      {
+        conteudo: 'Iniciam com a habilidade: Determinação.',
+      },
+      {
+        titulo: 'Determinação (Skill passiva):',
+        conteudo: [
+          'Caso você tome um golpe que iria zerar sua vida, você resiste com 1 de HP. A skill entra em recarga e só é reativada após seu HP ser preenchido ao máximo novamente.',
+          'Skill passiva.',
+        ],
+      },
+    ],
   },
+
   'Tritões': {
+    nome: 'Tritões',
     imagem: 'https://mouneteria.netlify.app/img/a-tritao.webp',
-    passivas: [
-      'Ganha 2 membros extras funcionais.',
-      'Na chuva ou em ambiente aquático, sua Agilidade aumenta em 1.5x.',
+    statusLinha: '-1 FORÇA   +3 DESTREZA   +2 ÉTER   +1 AGILIDADE',
+    habilidadeResumo: 'FLEXÍVEL COMO A ÁGUA',
+    topicos: [
+      {
+        conteudo: 'Tritões ganham +3 em Destreza, +2 em Éter, +1 em Agilidade e -1 em Força.',
+      },
+      {
+        conteudo: 'Fisiologia anfíbia: Ganha 2 membros extras funcionais.',
+      },
+      {
+        conteudo: 'Inicia com a habilidade: Flexível como a água.',
+      },
+      {
+        titulo: 'Flexível como a água:',
+        conteudo: [
+          'Passiva: sempre que estiver em chuva ou em um ambiente aquático seu status de agilidade aumenta em 1.5x.',
+          'Ativa: Custa 1/2 de sua mana máxima; em troca cria uma nuvem que cobre a área de batalha inteira e faz chover durante os próximos 10 turnos.',
+        ],
+      },
     ],
-    habilidadeInicial: {
-      nome: 'Flexível como a Água',
-      tipo: 'Ativa',
-      custo: 'Metade da Mana máx.',
-      descricao:
-        'Cria densa tempestade na arena por 10 turnos, ativando seus bônus de combate aquático.',
-    },
   },
+
   'Demônio': {
+    nome: 'Demônio',
     imagem: 'https://mouneteria.netlify.app/img/a-demonio.webp',
-    passivas: [
-      'Bônus de +2 em todos os atributos.',
-      'Vulnerabilidade: Sofre 1.4x de dano adicional contra Luz ou Divino.',
+    statusLinha: '+2 FORÇA   +2 DESTREZA   +2 ÉTER   +2 INTELECTO   +2 AGILIDADE   +2 VIGOR',
+    habilidadeResumo: 'CORROMPER',
+    topicos: [
+      {
+        conteudo: 'Arte de Demônio: Demônios recebem +2 em todos os atributos base.',
+      },
+      {
+        conteudo: 'Fraqueza sacra: Demônios recebem 1.4x de dano adicional de dano Luz ou Divino.',
+      },
+      {
+        conteudo: 'Iniciam com a habilidade: Corromper.',
+      },
+      {
+        titulo: 'Corromper (Skill ativa):',
+        conteudo: [
+          'Aplica uma maldição na mente do alvo que o deixa com status "Perverso" em alvos fracos, manipulando-o para te enxergar como aliado e reduzindo a força de seus golpes em 20 de dano físico.',
+          'Custo: Inicia custando 15 de Mana (+50 de MP por evolução da skill) · Fôlego: 1 · Skill ativa.',
+        ],
+      },
     ],
-    habilidadeInicial: {
-      nome: 'Corromper',
-      tipo: 'Ativa',
-      custo: '15 Mana (+50 MP/lvl)',
-      folego: '1 Fôlego',
-      descricao:
-        'Aplica "Perverso" em alvos fracos, manipulando-os para te verem como aliado e reduzindo seus ataques em 20 de dano físico.',
-    },
   },
+
   'Vampiro': {
+    nome: 'Vampiro',
     imagem: 'https://mouneteria.netlify.app/img/a-vampiro.webp',
-    passivas: ['Consumo de Sangue: Restaura 6 de HP sempre que consumir sangue.'],
-    habilidadeInicial: {
-      nome: 'Hemocinese',
-      tipo: 'Ativa',
-      custo: '10 Mana',
-      folego: '1 Fôlego',
-      descricao:
-        'Molda armas com sangue/ferro: causam 40 dano base com chance de Hemorragia (5% do HP atual do alvo como dano verdadeiro).',
-    },
-  },
-  'Hollow': {
-    imagem: 'https://mouneteria.netlify.app/img/a-hollow.webp',
-    passivas: [
-      'Aprende qualquer magia ou habilidade.',
-      'Fragilidade Existencial: Ao chegar a 0 de HP, morre imediatamente sem agonia.',
+    statusLinha: '+2 FORÇA   -3 DESTREZA   +2 ÉTER   +2 AGILIDADE   +2 VIGOR',
+    habilidadeResumo: 'HEMOCINESE',
+    topicos: [
+      {
+        conteudo: 'Vampiros ganham +2 em Vigor, Éter, Força e Agilidade, e -3 em Destreza.',
+      },
+      {
+        conteudo: 'Sede de Sangue: Toda vez que consumir sangue se cura em 6 de HP.',
+      },
+      {
+        conteudo: 'Inicia com a habilidade: Hemocinese.',
+      },
+      {
+        titulo: 'Hemocinese (Skill ativa):',
+        conteudo: [
+          'Pode-se controlar sangue de qualquer animal ou líquido que possua hemoglobina ou ferro para criar armas ou objetos.',
+          'Dano de arma de sangue: 40 dano base + chance de causar Hemorragia (5% da vida atual do inimigo como dano verdadeiro).',
+          'Custo: 10 de Mana de ativação · Fôlego: 1 · Skill ativa.',
+        ],
+      },
     ],
-    habilidadeInicial: {
-      nome: 'Devorar',
-      tipo: 'Ativa',
-      custo: 'Carne orgânica',
-      descricao:
-        'Ao consumir matéria orgânica de um aliado ou inimigo, absorve +1 a +2 no atributo principal da especialidade do alvo.',
-    },
   },
+
+  'Hollow': {
+    nome: 'Hollow',
+    imagem: 'https://mouneteria.netlify.app/img/a-hollow.webp',
+    statusLinha: '+1 FORÇA   +1 DESTREZA   +1 ÉTER   +1 INTELECTO   +1 AGILIDADE   +1 VIGOR',
+    habilidadeResumo: 'DEVORAR',
+    topicos: [
+      {
+        conteudo:
+          'Hollows recebem a capacidade de aprender qualquer tipo de magia ou habilidade e ganham +1 em todos os status.',
+      },
+      {
+        conteudo: 'Fragilidade mortal: Caso você chegue a 0 de HP, você morre definitivamente sem agonia.',
+      },
+      {
+        conteudo: 'Inicia com a habilidade: Devorar.',
+      },
+      {
+        titulo: 'Devorar (Skill ativa):',
+        conteudo: [
+          'Ao consumir carne ou matéria orgânica significativa de um aliado ou inimigo, ganha até +2 nos atributos diretos baseado na especialidade do alvo (ex.: devorar pernas de um corredor concede de 1 a +2 em Agilidade).',
+        ],
+      },
+    ],
+  },
+
   'Alquimista': {
+    nome: 'Alquimista',
     imagem: 'https://mouneteria.netlify.app/img/a-alquimista.webp',
-    passivas: ['Carrega uma cicatriz obrigatória visível no corpo.'],
-    habilidadeInicial: {
-      nome: 'Transmutação',
-      tipo: 'Ativa',
-      custo: 'HP variável',
-      descricao:
-        'Role Intelecto para aprender novas matérias ou minérios. Uma vez aprendido, replica a matéria ou forja armas à custa de HP.',
-    },
+    statusLinha: '+3 FORÇA   -1 DESTREZA   +3 ÉTER   -1 INTELECTO   -1 AGILIDADE   +2 VIGOR',
+    habilidadeResumo: 'TRANSMUTAÇÃO',
+    topicos: [
+      {
+        conteudo: 'Alquimistas ganham +3 em Força e Éter, +2 em Vigor, e -1 em todos os outros atributos.',
+      },
+      {
+        conteudo: 'Marca do sacrifício: Possui uma cicatriz em qualquer parte do corpo (obrigatório).',
+      },
+      {
+        conteudo: 'Inicia com a habilidade: Transmutação.',
+      },
+      {
+        titulo: 'Transmutação (Skill ativa):',
+        conteudo: [
+          'Role um dado de conhecimento (Intelecto) para aprender um tipo novo de matéria, minério ou elemento. Após aprender, pode criar armas ou replicar o minério à custa de seu próprio HP.',
+          'Custo de ativação: Conforme o minério ou elemento utilizado.',
+        ],
+      },
+    ],
   },
 };
 
@@ -178,278 +316,248 @@ export function PassoRaca({ draft, setDado, sistema }: PassoRacaProps) {
     ? draft.dados['raca']
     : '') as string;
 
-  const opcoes = campoRaca?.opcoes || Object.keys(RACAS_DATA);
+  const opcoes = campoRaca?.opcoes || Object.keys(RACAS_DETALHADAS);
 
   const selecionarRaca = (raca: string) => {
     sfx('confirm');
     setDado('raca', raca);
   };
 
+  // Abre a tela cinematográfica de detalhes inspirada exatamente na referência
   const abrirModalDetalhes = (raca: string) => {
-    const extras = RACAS_DATA[raca];
-    const efeitos = campoRaca?.efeitos?.[raca] || [];
+    const data = RACAS_DETALHADAS[raca] || {
+      nome: raca,
+      imagem: '',
+      statusLinha: '',
+      topicos: [],
+      habilidadeResumo: '',
+    };
 
     openModal(
       <div
-        className="mbox"
         style={{
-          width: 'min(580px, 92vw)',
-          maxWidth: '580px',
-          boxSizing: 'border-box',
-          padding: '24px',
+          width: 'min(940px, 94vw)',
+          maxHeight: '92vh',
+          overflowY: 'auto',
           overflowX: 'hidden',
-          border: '1px solid rgba(216, 180, 106, 0.3)',
-          background: 'linear-gradient(180deg, #0e1224 0%, #080a16 100%)',
-          boxShadow: '0 12px 40px rgba(0,0,0,0.8), 0 0 30px rgba(216,180,106,0.1)',
+          background: 'radial-gradient(circle at 75% 20%, #151a32 0%, #0a0d1d 50%, #05060e 100%)',
+          border: '1.5px solid rgba(216, 180, 106, 0.35)',
+          borderRadius: '16px',
+          boxShadow: '0 20px 50px rgba(0,0,0,0.85), 0 0 35px rgba(216, 180, 106, 0.15)',
+          padding: 'clamp(20px, 3.5vw, 36px)',
+          boxSizing: 'border-box',
+          position: 'relative',
         }}
       >
-        {/* Banner Ilustrado no Topo do Modal */}
-        {extras?.imagem && (
-          <div
-            style={{
-              position: 'relative',
-              width: '100%',
-              height: '240px',
-              borderRadius: '10px',
-              overflow: 'hidden',
-              marginBottom: '18px',
-              background: 'radial-gradient(ellipse at 50% 50%, rgba(30, 36, 70, 0.5) 0%, rgba(4, 5, 14, 0.98) 100%)',
-              border: '1px solid rgba(255,255,255,0.12)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              padding: '10px',
-              boxSizing: 'border-box',
-            }}
-          >
-            <img
-              src={extras.imagem}
-              alt={raca}
-              style={{
-                maxHeight: '100%',
-                maxWidth: '100%',
-                objectFit: 'contain',
-                filter: 'drop-shadow(0 6px 16px rgba(0,0,0,0.75))',
-              }}
-            />
-            {racaSelecionada === raca && (
-              <span
-                className="ed-sys"
-                style={{
-                  position: 'absolute',
-                  top: '12px',
-                  right: '12px',
-                  background: 'rgba(8, 10, 20, 0.9)',
-                  backdropFilter: 'blur(4px)',
-                  margin: 0,
-                  fontSize: '11.5px',
-                  padding: '3px 10px',
-                }}
-              >
-                ✓ Selecionada
-              </span>
-            )}
-          </div>
-        )}
-
-        {/* Título da Raça */}
-        <div style={{ marginBottom: '14px' }}>
-          <h3
-            style={{
-              margin: '0 0 4px',
-              fontFamily: 'var(--f-hk)',
-              fontSize: '26px',
-              fontWeight: 700,
-              letterSpacing: '0.04em',
-              color: 'var(--gold)',
-              textShadow: '0 2px 10px rgba(216,180,106,0.3)',
-            }}
-          >
-            {raca.toUpperCase()}
-          </h3>
-          <span style={{ fontSize: '12px', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-            Linhagem de Mouneteria
-          </span>
-        </div>
-
-        {/* Modificadores de Atributos */}
-        {efeitos.length > 0 && (
-          <div style={{ marginBottom: '16px' }}>
+        {/* PARTE SUPERIOR: 2 COLUNAS (TEXTO À ESQUERDA, RETRATO À DIREITA) */}
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'minmax(0, 1fr) auto',
+            gap: 'clamp(20px, 4vw, 40px)',
+            alignItems: 'center',
+            marginBottom: '28px',
+          }}
+        >
+          {/* Lado Esquerdo: "Raça", NOME GIGANTE e Status na horizontal */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
             <span
               style={{
-                fontSize: '11px',
-                letterSpacing: '0.1em',
-                color: 'var(--text-dim)',
-                textTransform: 'uppercase',
-                display: 'block',
-                marginBottom: '6px',
-                fontWeight: 600,
+                fontFamily: 'var(--f-hk-body)',
+                fontStyle: 'italic',
+                fontSize: '22px',
+                color: 'var(--gold)',
+                letterSpacing: '0.04em',
+                lineHeight: 1,
               }}
             >
-              Modificadores de Atributos
+              Raça
             </span>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
-              {efeitos.map((m, idx) => {
-                const isPos = m.valor > 0;
-                return (
-                  <span
-                    key={idx}
-                    className="chip"
-                    style={{
-                      borderColor: isPos ? 'rgba(127, 216, 166, 0.45)' : 'rgba(255, 157, 157, 0.45)',
-                      color: isPos ? '#7fd8a6' : '#ff9d9d',
-                      background: isPos ? 'rgba(127, 216, 166, 0.1)' : 'rgba(255, 157, 157, 0.1)',
-                      fontSize: '12px',
-                      padding: '3px 10px',
-                      borderRadius: '6px',
-                      fontWeight: 500,
-                    }}
-                  >
-                    {descreverEfeito(m, nomeDoCampo[m.campo] ?? m.campo)}
-                  </span>
-                );
-              })}
-            </div>
-          </div>
-        )}
 
-        {/* Características Raciais */}
-        {extras?.passivas && extras.passivas.length > 0 && (
-          <div style={{ marginBottom: '16px' }}>
-            <span
+            <h2
               style={{
-                fontSize: '11px',
-                letterSpacing: '0.1em',
-                color: 'var(--text-dim)',
-                textTransform: 'uppercase',
-                display: 'block',
-                marginBottom: '6px',
-                fontWeight: 600,
+                margin: '2px 0 10px',
+                fontFamily: 'var(--f-hk)',
+                fontSize: 'clamp(38px, 5.5vw, 68px)',
+                fontWeight: 700,
+                letterSpacing: '0.06em',
+                color: '#ffffff',
+                textShadow: '0 4px 20px rgba(255, 255, 255, 0.25), 0 0 30px rgba(216, 180, 106, 0.3)',
+                lineHeight: 1.05,
               }}
             >
-              Características Raciais
-            </span>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-              {extras.passivas.map((p, idx) => (
-                <div
-                  key={idx}
+              {data.nome.toUpperCase()}
+            </h2>
+
+            {/* Linha de Status em destaque (ex.: +2 DESTREZA   +1 ETER   +2 AGILIDADE) */}
+            <div
+              style={{
+                display: 'flex',
+                flexWrap: 'wrap',
+                gap: '14px',
+                fontSize: '13px',
+                fontWeight: 600,
+                letterSpacing: '0.12em',
+                color: '#e2e8f0',
+                textTransform: 'uppercase',
+                marginTop: '4px',
+              }}
+            >
+              {data.statusLinha.split('   ').map((st, i) => (
+                <span
+                  key={i}
                   style={{
-                    display: 'flex',
-                    gap: '8px',
-                    alignItems: 'baseline',
-                    fontSize: '13px',
-                    color: '#c9cee0',
-                    lineHeight: '1.4',
+                    color: st.startsWith('-') ? '#fca5a5' : '#7fd8a6',
+                    textShadow: '0 0 8px rgba(0,0,0,0.5)',
                   }}
                 >
-                  <span style={{ color: 'var(--gold)', fontSize: '11px' }}>✦</span>
-                  <span>{p}</span>
-                </div>
+                  {st}
+                </span>
               ))}
             </div>
           </div>
-        )}
 
-        {/* Card de Habilidade Inicial */}
-        {extras?.habilidadeInicial && (
-          <div
-            className="carta"
-            style={{
-              marginBottom: '20px',
-              padding: '14px 16px',
-              background: 'rgba(5, 7, 18, 0.75)',
-              border: '1px solid rgba(216, 180, 106, 0.2)',
-              borderRadius: '10px',
-              boxSizing: 'border-box',
-            }}
-          >
+          {/* Lado Direito: Retrato Vertical do Personagem emoldurado */}
+          {data.imagem && (
             <div
               style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                flexWrap: 'wrap',
-                gap: '8px',
-                marginBottom: '6px',
+                width: 'clamp(200px, 26vw, 290px)',
+                height: 'clamp(280px, 36vw, 390px)',
+                borderRadius: '12px',
+                overflow: 'hidden',
+                border: '2px solid rgba(139, 92, 246, 0.4)',
+                boxShadow: '0 8px 30px rgba(0,0,0,0.8), 0 0 25px rgba(139, 92, 246, 0.2)',
+                background: '#04050a',
+                flexShrink: 0,
               }}
             >
-              <b style={{ color: 'var(--gold)', fontSize: '15px', fontFamily: 'var(--f-hk)', letterSpacing: '0.02em' }}>
-                {extras.habilidadeInicial.nome}
-              </b>
-              <span
+              <img
+                src={data.imagem}
+                alt={data.nome}
                 style={{
-                  fontSize: '10.5px',
-                  letterSpacing: '0.08em',
-                  padding: '2px 8px',
-                  borderRadius: '4px',
-                  background: 'rgba(216, 180, 106, 0.12)',
-                  border: '1px solid rgba(216, 180, 106, 0.3)',
-                  color: 'var(--gold)',
-                  textTransform: 'uppercase',
-                  fontWeight: 600,
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  objectPosition: 'center 15%',
+                  display: 'block',
                 }}
-              >
-                Habilidade Inicial · {extras.habilidadeInicial.tipo}
-              </span>
+              />
             </div>
+          )}
+        </div>
 
-            {/* Custos e Recarga */}
-            <div
-              style={{
-                display: 'flex',
-                gap: '8px',
-                alignItems: 'center',
-                margin: '6px 0 8px',
-                fontSize: '12px',
-                color: 'var(--text-dim)',
-                flexWrap: 'wrap',
-              }}
-            >
-              <span style={{ color: '#93c5fd', fontWeight: 500 }}>{extras.habilidadeInicial.custo}</span>
-              {extras.habilidadeInicial.folego && (
-                <>
-                  <span style={{ opacity: 0.5 }}>·</span>
-                  <span>{extras.habilidadeInicial.folego}</span>
-                </>
-              )}
-              {extras.habilidadeInicial.cd && (
-                <>
-                  <span style={{ opacity: 0.5 }}>·</span>
-                  <span style={{ color: '#e2e8f0' }}>CD {extras.habilidadeInicial.cd}</span>
-                </>
-              )}
-            </div>
+        {/* PARTE INFERIOR: QUADRO DE TEXTO COM CANTONEIRAS E BULLETS ◆ */}
+        <div
+          style={{
+            position: 'relative',
+            background: 'rgba(8, 10, 22, 0.75)',
+            border: '1px solid rgba(255, 255, 255, 0.1)',
+            borderRadius: '6px',
+            padding: '24px 28px',
+            boxSizing: 'border-box',
+            marginBottom: '24px',
+          }}
+        >
+          {/* Detalhe de cantoneira angular superior esquerda: ┌ */}
+          <div
+            style={{
+              position: 'absolute',
+              top: '-1px',
+              left: '-1px',
+              width: '12px',
+              height: '12px',
+              borderTop: '2px solid #818cf8',
+              borderLeft: '2px solid #818cf8',
+            }}
+          />
 
-            <p style={{ margin: 0, fontSize: '12.5px', color: '#b9bfd4', lineHeight: '1.5' }}>
-              {extras.habilidadeInicial.descricao}
-            </p>
+          {/* Detalhe de cantoneira angular inferior direita: ┘ */}
+          <div
+            style={{
+              position: 'absolute',
+              bottom: '-1px',
+              right: '-1px',
+              width: '12px',
+              height: '12px',
+              borderBottom: '2px solid #818cf8',
+              borderRight: '2px solid #818cf8',
+            }}
+          />
+
+          {/* Lista de tópicos com bullet ◆ */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+            {data.topicos.map((top, idx) => (
+              <div key={idx} style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
+                <span
+                  style={{
+                    color: '#2dd4bf', // Verde-água ciano vibrante exatamente como na referência
+                    fontSize: '13px',
+                    lineHeight: '1.6',
+                    flexShrink: 0,
+                  }}
+                >
+                  ◆
+                </span>
+
+                <div style={{ fontSize: '14.5px', color: '#d1d5db', lineHeight: '1.6' }}>
+                  {top.titulo && (
+                    <strong style={{ color: '#f3f4f6', display: 'block', marginBottom: '2px' }}>
+                      {top.titulo}
+                    </strong>
+                  )}
+                  {Array.isArray(top.conteudo) ? (
+                    top.conteudo.map((linha, liIdx) => (
+                      <p key={liIdx} style={{ margin: liIdx > 0 ? '4px 0 0' : 0 }}>
+                        {linha}
+                      </p>
+                    ))
+                  ) : (
+                    <span>{top.conteudo}</span>
+                  )}
+                </div>
+              </div>
+            ))}
           </div>
-        )}
+        </div>
 
-        {/* Rodapé do Modal com Botões Alinhados */}
+        {/* BARRA DE AÇÕES NO RODAPÉ DO MODAL */}
         <div
           style={{
             display: 'flex',
-            justifyContent: 'flex-end',
-            gap: '12px',
-            paddingTop: '16px',
-            borderTop: '1px solid rgba(255, 255, 255, 0.08)',
-            boxSizing: 'border-box',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            paddingTop: '8px',
           }}
         >
-          <button type="button" className="btn subtle" onClick={closeModal} style={{ padding: '8px 18px' }}>
-            Fechar
+          <button
+            type="button"
+            className="btn subtle"
+            style={{
+              padding: '10px 22px',
+              fontSize: '14px',
+              borderRadius: '8px',
+              border: '1px solid rgba(255,255,255,0.15)',
+            }}
+            onClick={closeModal}
+          >
+            ← Voltar
           </button>
+
           <button
             type="button"
             className="btn primary"
-            style={{ padding: '8px 22px', fontWeight: 600 }}
+            style={{
+              padding: '10px 28px',
+              fontSize: '15px',
+              fontWeight: 600,
+              borderRadius: '8px',
+            }}
             onClick={() => {
               selecionarRaca(raca);
               closeModal();
             }}
           >
-            {racaSelecionada === raca ? '✓ Já selecionada' : 'Selecionar ' + raca}
+            {racaSelecionada === raca ? '✓ Raça já selecionada' : 'Selecionar ' + raca}
           </button>
         </div>
       </div>
@@ -521,10 +629,9 @@ export function PassoRaca({ draft, setDado, sistema }: PassoRacaProps) {
           {opcoes.map((opcao) => {
             const isSelected = racaSelecionada === opcao;
             const isHovered = hoveredRaca === opcao;
-            const extras = RACAS_DATA[opcao];
+            const data = RACAS_DETALHADAS[opcao];
             const efeitos = campoRaca?.efeitos?.[opcao] || [];
 
-            // Resumo de status conciso
             const statusResumo = efeitos
               .map((m) => descreverEfeito(m, nomeDoCampo[m.campo] ?? m.campo))
               .join(', ');
@@ -561,9 +668,9 @@ export function PassoRaca({ draft, setDado, sistema }: PassoRacaProps) {
                     background: '#03040a',
                   }}
                 >
-                  {extras?.imagem && (
+                  {data?.imagem && (
                     <img
-                      src={extras.imagem}
+                      src={data.imagem}
                       alt={opcao}
                       style={{
                         width: '100%',
@@ -575,7 +682,7 @@ export function PassoRaca({ draft, setDado, sistema }: PassoRacaProps) {
                     />
                   )}
 
-                  {/* Gradiente escuro sutil na base da imagem para fundir com a parte inferior */}
+                  {/* Gradiente escuro na base da imagem */}
                   <div
                     style={{
                       position: 'absolute',
@@ -630,7 +737,7 @@ export function PassoRaca({ draft, setDado, sistema }: PassoRacaProps) {
                   </h3>
 
                   {/* Habilidade Destacada */}
-                  {extras?.habilidadeInicial && (
+                  {data?.habilidadeResumo && (
                     <span
                       style={{
                         fontSize: '11px',
@@ -641,7 +748,7 @@ export function PassoRaca({ draft, setDado, sistema }: PassoRacaProps) {
                         margin: '2px 0',
                       }}
                     >
-                      {extras.habilidadeInicial.nome}
+                      {data.habilidadeResumo}
                     </span>
                   )}
 
