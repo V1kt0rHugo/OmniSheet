@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import { screenCls, useApp } from '../app/AppContext';
 import { useFichaMutations } from '../api/useFichas';
 import { newDraft } from '../lib/ficha';
@@ -23,7 +23,7 @@ export function WizardScreen({ session }: { session: WizardSession | null }) {
     <section
       id="scr-wizard"
       className={screenCls(screen === 'wizard', instant)}
-      aria-label="Criação de Personagem"
+      aria-label="Criação de Ficha"
     >
       {session && sistema && (
         <WizardForm key={session.key} session={session} sistema={sistema} />
@@ -39,7 +39,7 @@ function WizardForm({
   session: WizardSession;
   sistema: Sistema;
 }) {
-  const { fichas, show, openSheet, toast, confirm } = useApp();
+  const { fichas, show, toast, confirm } = useApp();
   const { create } = useFichaMutations();
 
   const [draft, setDraft] = useState<FichaDraft>(() => newDraft(sistema));
@@ -49,7 +49,8 @@ function WizardForm({
   const [saving, setSaving] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  const TOTAL_PASSOS = 2;
+  const PASSOS_NOMES = ['Identificação', 'Raça'];
+  const TOTAL_PASSOS = PASSOS_NOMES.length;
 
   const set = <K extends keyof FichaDraft>(k: K, v: FichaDraft[K]) => {
     setDraft((d) => ({ ...d, [k]: v }));
@@ -60,14 +61,6 @@ function WizardForm({
     setDraft((d) => ({ ...d, dados: { ...d.dados, [id]: v } }));
     setDirty(true);
   };
-
-  // Se o usuário selecionou uma raça e não enviou imagem própria, pode usar a da raça
-  useEffect(() => {
-    const raca = draft.dados['raca'];
-    if (raca === 'Meio Dragão' && !draft.imagem) {
-      // Deixa a arte da raça pronta caso deseje usar como fallback
-    }
-  }, [draft.dados, draft.imagem]);
 
   const handleNext = async () => {
     if (passo === 0) {
@@ -84,7 +77,6 @@ function WizardForm({
     }
 
     if (passo === 1) {
-      // Concluir criação da ficha
       await saveFicha();
     }
   };
@@ -107,7 +99,7 @@ function WizardForm({
   const handleCancel = async () => {
     if (dirty) {
       const ok = await confirm({
-        title: 'Descartar alterações?',
+        title: 'Descartar criação?',
         text: 'O que você preencheu nesta ficha ainda não foi salvo.',
         ok: 'Descartar',
         danger: true,
@@ -133,7 +125,6 @@ function WizardForm({
       const payload: FichaDraft = {
         ...draft,
         nome,
-        // Se a raça for Meio Dragão, podemos garantir a skill inicial
         dados: { ...draft.dados },
       };
 
@@ -147,7 +138,7 @@ function WizardForm({
       H.dirty = true;
       show('hall', { assemble: true });
       H.target = clamp(idx, 0, idx + 1);
-      toast('Ficha criada com sucesso!');
+      toast('Ficha criada. Um novo fragmento se formou no espelho.');
       setDirty(false);
     } catch (e) {
       toast((e as Error).message || 'Não consegui salvar a ficha. Tente de novo.');
@@ -157,8 +148,38 @@ function WizardForm({
   };
 
   return (
-    <div className="wiz-container scroll" ref={scrollRef}>
-      <div className="wiz-content-wrap">
+    <div className="scroll" ref={scrollRef}>
+      {/* Topo no padrão OminiSheet */}
+      <header className="ed-top">
+        <button type="button" className="btn subtle" onClick={handleBack}>
+          {passo === 0 ? 'Cancelar' : '← Voltar'}
+        </button>
+
+        <h2>
+          {PASSOS_NOMES[passo]}
+          <span className="ed-sys">
+            Passo {passo + 1} de {TOTAL_PASSOS} · {sistema.nome}
+          </span>
+        </h2>
+
+        <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+          <button
+            type="button"
+            className="btn primary"
+            disabled={saving}
+            onClick={handleNext}
+          >
+            {passo === TOTAL_PASSOS - 1
+              ? saving
+                ? 'Criando...'
+                : 'Concluir ficha'
+              : 'Próximo →'}
+          </button>
+        </div>
+      </header>
+
+      {/* Conteúdo do Passo */}
+      <div style={{ maxWidth: '1080px', margin: '20px auto 0' }}>
         {passo === 0 && (
           <PassoIdentificacao
             draft={draft}
@@ -179,33 +200,25 @@ function WizardForm({
         )}
       </div>
 
-      {/* Barra de Rodapé Fixa */}
-      <footer className="wiz-bottom-bar">
-        <button
-          type="button"
-          className="wiz-btn-voltar"
-          onClick={handleBack}
-        >
-          ← Voltar
+      {/* Rodapé no estilo do OminiSheet */}
+      <div className="ed-foot" style={{ maxWidth: '1080px', margin: '40px auto 20px', borderTop: '1px solid rgba(255,255,255,.08)', paddingTop: '16px' }}>
+        <button type="button" className="btn subtle" onClick={handleBack}>
+          {passo === 0 ? 'Descartar ficha' : '← Voltar para ' + PASSOS_NOMES[passo - 1]}
         </button>
 
-        <div className="wiz-status-salvo">
-          <span className="wiz-cloud-icon">☁</span> Salvo na mesa
-        </div>
-
         <button
           type="button"
-          className="wiz-btn-proximo"
+          className="btn primary"
           disabled={saving}
           onClick={handleNext}
         >
           {passo === TOTAL_PASSOS - 1
             ? saving
-              ? 'Salvando...'
-              : 'Concluir →'
-            : 'Próximo →'}
+              ? 'Criando...'
+              : 'Concluir e formar fragmento'
+            : 'Avançar para ' + PASSOS_NOMES[passo + 1] + ' →'}
         </button>
-      </footer>
+      </div>
     </div>
   );
 }

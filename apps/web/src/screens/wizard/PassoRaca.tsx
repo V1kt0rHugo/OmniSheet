@@ -8,7 +8,6 @@ export interface PassoRacaProps {
   sistema: Sistema;
 }
 
-// Metadados visuais e ilustrações para raças conhecidas
 interface RacaInfo {
   imagem?: string;
   passivas?: string[];
@@ -37,7 +36,6 @@ const RACAS_EXTRAS: Record<string, RacaInfo> = {
 };
 
 export function PassoRaca({ draft, setDado, sistema }: PassoRacaProps) {
-  // Encontra o campo de seleção de raça
   const campos = camposDe(sistema);
   const campoRaca = campos.find((c) => c.id === 'raca' && c.tipo === 'selecao');
   const nomeDoCampo = Object.fromEntries(campos.map((c) => [c.id, c.label]));
@@ -53,96 +51,116 @@ export function PassoRaca({ draft, setDado, sistema }: PassoRacaProps) {
   };
 
   return (
-    <div className="wiz-passo-raca">
-      <div className="wiz-header-text">
-        <span className="wiz-eyebrow">PASSO 2</span>
-        <h2 className="wiz-title">RAÇA</h2>
-        <p className="wiz-subtitle">
-          Escolha a raça do seu personagem. Os atributos e habilidades são ajustados automaticamente.
+    <div className="wiz-step-wrap">
+      <div className="sys-wrap">
+        <p className="sys-lead">
+          Escolha a ancestralidade ou raça do seu personagem. Cada raça confere bônus específicos a atributos e pode conceder técnicas iniciais.
         </p>
-      </div>
 
-      <div className="wiz-racas-grid">
-        {opcoes.map((opcao) => {
-          const isSelected = racaSelecionada === opcao;
-          const extras = RACAS_EXTRAS[opcao];
-          const efeitos = campoRaca?.efeitos?.[opcao] || [];
+        <div className="sys-grid">
+          {opcoes.map((opcao) => {
+            const isSelected = racaSelecionada === opcao;
+            const extras = RACAS_EXTRAS[opcao];
+            const efeitos = campoRaca?.efeitos?.[opcao] || [];
 
-          return (
-            <div
-              key={opcao}
-              className={`wiz-raca-card ${isSelected ? 'selected' : ''}`}
-              onClick={() => selecionarRaca(opcao)}
-            >
-              <div className="wiz-raca-card-header">
-                {extras?.imagem ? (
-                  <div className="wiz-raca-thumb">
-                    <img src={extras.imagem} alt={opcao} />
-                  </div>
-                ) : (
-                  <div className="wiz-raca-thumb placeholder">
-                    <span>{opcao.slice(0, 1)}</span>
-                  </div>
-                )}
-                <div className="wiz-raca-meta">
-                  <h3 className="wiz-raca-name">{opcao}</h3>
-                  <span className="wiz-raca-badge">
-                    {isSelected ? '✓ Selecionada' : 'Clique para escolher'}
-                  </span>
+            return (
+              <article
+                key={opcao}
+                className={`sys-card ${isSelected ? 'selected' : ''}`}
+                style={{
+                  borderColor: isSelected ? 'var(--gold)' : undefined,
+                  background: isSelected ? 'rgba(216,180,106,.08)' : undefined,
+                  cursor: 'pointer',
+                }}
+                onClick={() => selecionarRaca(opcao)}
+              >
+                <div className="sys-pick">
+                  <header style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <h3>
+                      {opcao}
+                      {isSelected && <span className="ed-sys">Escolhida</span>}
+                    </h3>
+                  </header>
+
+                  {extras?.imagem && (
+                    <div
+                      style={{
+                        width: '100%',
+                        height: '140px',
+                        borderRadius: '8px',
+                        overflow: 'hidden',
+                        margin: '6px 0',
+                        background: 'rgba(0,0,0,0.4)',
+                        border: '1px solid rgba(255,255,255,0.08)',
+                      }}
+                    >
+                      <img
+                        src={extras.imagem}
+                        alt={opcao}
+                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                      />
+                    </div>
+                  )}
+
+                  {efeitos.length > 0 && (
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', margin: '6px 0' }}>
+                      {efeitos.map((m, idx) => (
+                        <span key={idx} className="chip" style={{ borderColor: 'rgba(216,180,106,.4)', color: 'var(--gold)' }}>
+                          {descreverEfeito(m, nomeDoCampo[m.campo] ?? m.campo)}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+
+                  {extras?.passivas && (
+                    <div style={{ margin: '4px 0', fontSize: '13px', color: '#c3c9de' }}>
+                      {extras.passivas.map((p, idx) => (
+                        <div key={idx} style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
+                          <span style={{ color: 'var(--gold)' }}>✦</span>
+                          <span>{p}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {extras?.habilidadeInicial && (
+                    <div
+                      className="carta"
+                      style={{
+                        marginTop: '8px',
+                        padding: '10px 12px',
+                        background: 'rgba(7,10,24,.6)',
+                      }}
+                    >
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <b style={{ color: 'var(--gold)', fontSize: '13.5px' }}>
+                          {extras.habilidadeInicial.nome}
+                        </b>
+                        <small style={{ color: 'var(--text-dim)', fontSize: '11.5px' }}>
+                          Habilidade Inicial
+                        </small>
+                      </div>
+                      <div style={{ display: 'flex', gap: '8px', margin: '4px 0', fontSize: '11.5px', color: 'var(--text-dim)' }}>
+                        <span>{extras.habilidadeInicial.custo}</span>
+                        <span>·</span>
+                        <span>{extras.habilidadeInicial.folego}</span>
+                        <span>·</span>
+                        <span>CD {extras.habilidadeInicial.cd}</span>
+                      </div>
+                      <p style={{ margin: '4px 0 0', fontSize: '12.5px', color: '#b9bfd4', lineHeight: '1.4' }}>
+                        {extras.habilidadeInicial.descricao}
+                      </p>
+                    </div>
+                  )}
+
+                  <small style={{ marginTop: 'auto', paddingTop: '8px' }}>
+                    {isSelected ? '✓ Raça selecionada para a ficha' : 'Clique para selecionar esta raça'}
+                  </small>
                 </div>
-              </div>
-
-              {/* Modificadores de atributos */}
-              {efeitos.length > 0 && (
-                <div className="wiz-raca-section">
-                  <span className="wiz-raca-subhead">MODIFICADORES DE ATRIBUTOS</span>
-                  <div className="wiz-raca-chips">
-                    {efeitos.map((m, idx) => (
-                      <span
-                        key={idx}
-                        className={`wiz-chip ${m.valor >= 0 ? 'pos' : 'neg'}`}
-                      >
-                        {descreverEfeito(m, nomeDoCampo[m.campo] ?? m.campo)}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Passivas */}
-              {extras?.passivas && extras.passivas.length > 0 && (
-                <div className="wiz-raca-section">
-                  <span className="wiz-raca-subhead">CARACTERÍSTICAS DA RAÇA</span>
-                  <ul className="wiz-raca-list">
-                    {extras.passivas.map((p, idx) => (
-                      <li key={idx}>{p}</li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-
-              {/* Habilidade Inicial */}
-              {extras?.habilidadeInicial && (
-                <div className="wiz-raca-section wiz-skill-box">
-                  <div className="wiz-skill-header">
-                    <span className="wiz-raca-subhead">HABILIDADE INICIAL:</span>
-                    <strong className="wiz-skill-title">
-                      {extras.habilidadeInicial.nome}
-                    </strong>
-                  </div>
-                  <div className="wiz-skill-cost-row">
-                    <span className="wiz-cost-tag">Custo: {extras.habilidadeInicial.custo}</span>
-                    <span className="wiz-cost-tag">Fôlego: {extras.habilidadeInicial.folego}</span>
-                    <span className="wiz-cost-tag">CD: {extras.habilidadeInicial.cd}</span>
-                  </div>
-                  <p className="wiz-skill-desc">
-                    {extras.habilidadeInicial.descricao}
-                  </p>
-                </div>
-              )}
-            </div>
-          );
-        })}
+              </article>
+            );
+          })}
+        </div>
       </div>
     </div>
   );

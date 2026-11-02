@@ -1,6 +1,7 @@
 import { useRef, type ChangeEvent } from 'react';
 import type { FichaDraft, Dados } from '../../types';
 import { shrink } from '../../lib/image';
+import { Frag } from '../../components/Frag';
 
 export interface PassoIdentificacaoProps {
   draft: FichaDraft;
@@ -46,167 +47,42 @@ export function PassoIdentificacao({
     e.target.value = '';
   };
 
-  const enquadramento = getDado('enquadramento') || 'inteira';
-  const zoom = Number(getDado('zoom_retrato') || '50');
-  const horizontal = Number(getDado('pos_horizontal') || '50');
-  const vertical = typeof draft.foco === 'number' ? draft.foco : 50;
-
-  const handleCentralizar = () => {
-    set('foco', 50);
-    setDado('zoom_retrato', '50');
-    setDado('pos_horizontal', '50');
-  };
-
-  // Cálculo de transformação para o preview da imagem
-  // zoom: 50 -> 1x, 0 -> 0.7x, 100 -> 2x
-  const scale = 0.7 + (zoom / 100) * 1.3;
-  // horizontal: 0% a 100%
-  const posX = horizontal;
-  // vertical: 0% a 100%
-  const posY = vertical;
-
   return (
-    <div className="wiz-passo-identificacao">
-      <div className="wiz-header-text">
-        <span className="wiz-eyebrow">PASSO 1</span>
-        <h2 className="wiz-title">IDENTIFICAÇÃO</h2>
-        <p className="wiz-subtitle">
-          Os campos da ficha base. Só o nome é obrigatório agora.
-        </p>
-      </div>
-
-      {/* Grid Linha 1: 5 campos */}
-      <div className="wiz-field-row five-cols">
-        <label className={`wiz-label ${nameErr ? 'has-error' : ''}`}>
-          <span>NOME *</span>
-          <input
-            type="text"
-            placeholder="Ex.: Kael"
-            value={draft.nome}
-            onChange={(e) => {
-              set('nome', e.target.value);
-              if (e.target.value.trim()) setNameErr(false);
-            }}
-          />
-        </label>
-
-        <label className="wiz-label">
-          <span>SOBRENOME</span>
-          <input
-            type="text"
-            placeholder=""
-            value={getDado('sobrenome')}
-            onChange={(e) => setDado('sobrenome', e.target.value)}
-          />
-        </label>
-
-        <label className="wiz-label">
-          <span>JOGADOR</span>
-          <input
-            type="text"
-            placeholder=""
-            value={getDado('jogador')}
-            onChange={(e) => setDado('jogador', e.target.value)}
-          />
-        </label>
-
-        <label className="wiz-label">
-          <span>IDADE</span>
-          <input
-            type="text"
-            placeholder=""
-            value={getDado('idade')}
-            onChange={(e) => setDado('idade', e.target.value)}
-          />
-        </label>
-
-        <label className="wiz-label">
-          <span>PESO</span>
-          <input
-            type="text"
-            placeholder="Ex.: 68 kg"
-            value={getDado('peso')}
-            onChange={(e) => setDado('peso', e.target.value)}
-          />
-        </label>
-      </div>
-
-      {/* Grid Linha 2: 4 campos */}
-      <div className="wiz-field-row four-cols">
-        <label className="wiz-label">
-          <span>ALTURA</span>
-          <input
-            type="text"
-            placeholder="Ex.: 1,78 m"
-            value={getDado('altura')}
-            onChange={(e) => setDado('altura', e.target.value)}
-          />
-        </label>
-
-        <label className="wiz-label">
-          <span>DIA DE NASCIMENTO</span>
-          <input
-            type="text"
-            placeholder="00/00/2047"
-            value={getDado('data_nascimento')}
-            onChange={(e) => setDado('data_nascimento', e.target.value)}
-          />
-        </label>
-
-        <label className="wiz-label">
-          <span>ESPECIALISTA</span>
-          <input
-            type="text"
-            placeholder="Em que ele é especialista"
-            value={getDado('especialista')}
-            onChange={(e) => setDado('especialista', e.target.value)}
-          />
-        </label>
-
-        <label className="wiz-label">
-          <span>APELIDO</span>
-          <input
-            type="text"
-            placeholder=""
-            value={getDado('apelido')}
-            onChange={(e) => setDado('apelido', e.target.value)}
-          />
-        </label>
-      </div>
-
-      {/* Seção Retrato & Enquadramento */}
-      <div className="wiz-portrait-section">
-        {/* Caixa do Retrato */}
-        <div
-          className="wiz-portrait-box"
+    <div className="ed-grid">
+      {/* Coluna da Esquerda: Fragmento de Vidro (Retrato da Ficha no OminiSheet) */}
+      <aside className="ed-visual">
+        <Frag
+          ficha={draft}
+          interactive
           onClick={() => fileInputRef.current?.click()}
-          title="Clique para enviar ou alterar o retrato"
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              fileInputRef.current?.click();
+            }
+          }}
         >
-          {draft.imagem ? (
-            <div
-              className="wiz-portrait-img-wrap"
-              style={{
-                overflow: 'hidden',
-                width: '100%',
-                height: '100%',
-              }}
+          {!draft.imagem && (
+            <div className="hint">Clique ou arraste o retrato aqui</div>
+          )}
+        </Frag>
+
+        <div className="row">
+          <button
+            type="button"
+            className="btn"
+            onClick={() => fileInputRef.current?.click()}
+          >
+            Escolher retrato
+          </button>
+          {draft.imagem && (
+            <button
+              type="button"
+              className="btn subtle"
+              onClick={() => set('imagem', null)}
             >
-              <img
-                src={draft.imagem}
-                alt="Retrato"
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  objectFit: enquadramento === 'preencher' ? 'cover' : 'contain',
-                  transform: `scale(${scale})`,
-                  objectPosition: `${posX}% ${posY}%`,
-                }}
-              />
-            </div>
-          ) : (
-            <div className="wiz-portrait-placeholder">
-              <span className="wiz-question-mark">?</span>
-            </div>
+              Remover
+            </button>
           )}
         </div>
 
@@ -218,98 +94,163 @@ export function PassoIdentificacao({
           onChange={onFileInputChange}
         />
 
-        {/* Controles do Retrato */}
-        <div className="wiz-portrait-controls">
-          <div className="wiz-ctrl-group">
-            <span className="wiz-sub-label">RETRATO</span>
-            <div className="wiz-btn-row">
-              <button
-                type="button"
-                className="wiz-btn-ghost"
-                onClick={() => fileInputRef.current?.click()}
-              >
-                Enviar imagem
-              </button>
-              {draft.imagem && (
-                <button
-                  type="button"
-                  className="wiz-btn-ghost subtle"
-                  onClick={() => set('imagem', null)}
-                >
-                  Remover
-                </button>
-              )}
-            </div>
-            <p className="wiz-caption">
-              Sem imagem, a ficha usa a arte da classe ou da raça.
-            </p>
-          </div>
+        <label className="fld">
+          <span>
+            Enquadramento vertical <i>ajusta a posição no fragmento</i>
+          </span>
+          <input
+            type="range"
+            min={0}
+            max={100}
+            value={draft.foco ?? 25}
+            onChange={(e) => set('foco', +e.target.value)}
+          />
+        </label>
 
-          <div className="wiz-ctrl-group">
-            <span className="wiz-sub-label">ENQUADRAMENTO</span>
-            <div className="wiz-pill-toggle">
-              <button
-                type="button"
-                className={`wiz-pill-btn ${enquadramento === 'preencher' ? 'active' : ''}`}
-                onClick={() => setDado('enquadramento', 'preencher')}
-              >
-                Preencher
-              </button>
-              <button
-                type="button"
-                className={`wiz-pill-btn ${enquadramento === 'inteira' ? 'active' : ''}`}
-                onClick={() => setDado('enquadramento', 'inteira')}
-              >
-                Inteira
-              </button>
-            </div>
-          </div>
+        <label className="fld">
+          <span>
+            Cor do fragmento <i>aura no espelho do Hall</i>
+          </span>
+          <input
+            type="range"
+            min={0}
+            max={359}
+            value={draft.cor ?? 210}
+            onChange={(e) => set('cor', +e.target.value)}
+          />
+        </label>
+      </aside>
 
-          <div className="wiz-sliders-group">
-            <div className="wiz-slider-item">
-              <span className="wiz-slider-name">Zoom</span>
+      {/* Coluna da Direita: Formulário de Identificação no Estilo do OminiSheet */}
+      <div className="ed-form">
+        <section>
+          <h3>Identidade Básica</h3>
+          <p className="sys-lead" style={{ fontSize: '14px', margin: 0 }}>
+            Defina o nome e as informações do personagem. Apenas o nome é obrigatório neste momento.
+          </p>
+
+          <label className={`fld ${nameErr ? 'bad' : ''}`}>
+            <span>
+              Nome <i>obrigatório</i>
+            </span>
+            <input
+              type="text"
+              placeholder="Ex.: Kael"
+              autoComplete="off"
+              maxLength={80}
+              value={draft.nome}
+              onChange={(e) => {
+                set('nome', e.target.value);
+                if (e.target.value.trim()) setNameErr(false);
+              }}
+            />
+            {nameErr && <em className="err">Informe o nome do personagem.</em>}
+          </label>
+
+          <div className="g2">
+            <label className="fld">
+              <span>Sobrenome</span>
               <input
-                type="range"
-                min="0"
-                max="100"
-                value={zoom}
-                onChange={(e) => setDado('zoom_retrato', e.target.value)}
+                type="text"
+                autoComplete="off"
+                maxLength={80}
+                value={getDado('sobrenome')}
+                onChange={(e) => setDado('sobrenome', e.target.value)}
               />
-            </div>
+            </label>
 
-            <div className="wiz-slider-item">
-              <span className="wiz-slider-name">Horizontal</span>
+            <label className="fld">
+              <span>Apelido</span>
               <input
-                type="range"
-                min="0"
-                max="100"
-                value={horizontal}
-                onChange={(e) => setDado('pos_horizontal', e.target.value)}
+                type="text"
+                autoComplete="off"
+                maxLength={80}
+                value={getDado('apelido')}
+                onChange={(e) => setDado('apelido', e.target.value)}
               />
-            </div>
-
-            <div className="wiz-slider-item">
-              <span className="wiz-slider-name">Vertical</span>
-              <input
-                type="range"
-                min="0"
-                max="100"
-                value={vertical}
-                onChange={(e) => set('foco', Number(e.target.value))}
-              />
-            </div>
+            </label>
           </div>
 
-          <div className="wiz-centralizar-row">
-            <button
-              type="button"
-              className="wiz-btn-ghost"
-              onClick={handleCentralizar}
-            >
-              Centralizar
-            </button>
+          <div className="g2">
+            <label className="fld">
+              <span>Jogador <i>quem interpreta</i></span>
+              <input
+                type="text"
+                autoComplete="off"
+                maxLength={80}
+                value={getDado('jogador')}
+                onChange={(e) => setDado('jogador', e.target.value)}
+              />
+            </label>
+
+            <label className="fld">
+              <span>Especialista em</span>
+              <input
+                type="text"
+                placeholder="Ex.: Armas pesadas, magias antigas..."
+                autoComplete="off"
+                maxLength={80}
+                value={getDado('especialista')}
+                onChange={(e) => setDado('especialista', e.target.value)}
+              />
+            </label>
           </div>
-        </div>
+        </section>
+
+        <section>
+          <h3>Características Físicas</h3>
+          <div className="g3">
+            <label className="fld">
+              <span>Idade</span>
+              <input
+                type="text"
+                placeholder="Ex.: 24"
+                autoComplete="off"
+                maxLength={20}
+                value={getDado('idade')}
+                onChange={(e) => setDado('idade', e.target.value)}
+              />
+            </label>
+
+            <label className="fld">
+              <span>Altura</span>
+              <input
+                type="text"
+                placeholder="Ex.: 1,78 m"
+                autoComplete="off"
+                maxLength={20}
+                value={getDado('altura')}
+                onChange={(e) => setDado('altura', e.target.value)}
+              />
+            </label>
+
+            <label className="fld">
+              <span>Peso</span>
+              <input
+                type="text"
+                placeholder="Ex.: 72 kg"
+                autoComplete="off"
+                maxLength={20}
+                value={getDado('peso')}
+                onChange={(e) => setDado('peso', e.target.value)}
+              />
+            </label>
+          </div>
+
+          <div className="g2">
+            <label className="fld">
+              <span>Data de Nascimento</span>
+              <input
+                type="text"
+                placeholder="00/00/2047"
+                autoComplete="off"
+                maxLength={30}
+                value={getDado('data_nascimento')}
+                onChange={(e) => setDado('data_nascimento', e.target.value)}
+              />
+            </label>
+          </div>
+        </section>
       </div>
     </div>
   );
