@@ -9,4 +9,163 @@ Custo:20 Mana.
 Folego:1
 CD:3 turnos.
 Skill ativa.
-dado mínimo para selecionar : Não é necessario
+dado mínimo para selecionar : Não é necessario.
+
+Elfo:
+Imagem: https://mouneteria.netlify.app/img/a-elfo.webp
+Status Extras : +2 Destreza,+1 Eter,+2 Agilidade
+Enquanto está em um campo de batalha conhecido de forma abrangente, recebe +2 bônus em todos os dados de combate.
+Inicia com a habilidade: Pontaria.
+Pontaria:
+Passivamente todos seus golpes a distancia duplicam o raio de acerto e também seus recursos gastos caso seja uma magia será reduzido em 1.33x do custo de mana.
+Skill passiva.
+dado mínimo para selecionar : Não é necessario.
+
+Gigante:
+Imagem: https://mouneteria.netlify.app/img/a-gigante.webp
+Status Extas : +3 em Força,+3 Vigor,-1 Agilidade.
+Refletir skill ativa:
+invoca uma esfera protetora envolta de si e de seus aliados (Max 3) que vai proteger 1/4x do dano recebido por 2 turnos.
+Custo:20 de MP por pessoa.
+Folego:1
+Skill ativa.
+
+Humano:
+Imagem : https://mouneteria.netlify.app/img/a-humano.webp
++1 Força
++1 Destreza
+-4 Eter
++5 Intelecto
++1 Agilidade
++1 Vigor
+Arte de Humano
+Humanos ganham +1 em todos os status exceto por Eter e intelecto +5 Intelecto, -4 em Eter,.
+Adaptabilidade: Recebe +3 em testes de aprendizagem.
+Inicia com a habilidade: Genialidade
+Genialidade:
+entra em uma epifania mental e faz com que qualquer dado de estratégia ou intelecto recebam um buff de +8 adicional pelos próximos 3 dados.
+Custo: 15 de hp.
+Folego:0.
+Skill ativa.
+
+
+Goblin:
+Imagem : https://mouneteria.netlify.app/img/a-goblin.webp
++3 Destreza
+-1 Intelecto
++3 Agilidade
+Arte de Goblin
+Goblins recebem +3 em Agilidade, Destreza e -1 em Intelecto.
+No escuro se camufla completamente após ficar 1 turno sem atacar.
+Iniciam com a habilidade: Furto
+Furto:
+faz com que o individuo magicamente roube alguma coisa aleatória de seu alvo, quão maior seu dado for melhor o item que pode ser roubado.
+Custo: 15 de mana.
+Folego:1
+Skill ativa.
+(Dado único que evolui com a skill: d20+2)
+
+Prisioneiro
+Imagem : https://mouneteria.netlify.app/img/a-prisioneiro.webp
++1 Destreza
++3 Eter
+-1 Intelecto
++3 Vigor
+Arte de Prisioneiro
+Prisioneiros recebem +3 em Vigor,Eter +1 Destreza -1 em Intelecto.
+e iniciam e o máximo de sanidade que se podem ter é 80.
+Iniciam com a habilidade: Determinação.
+Determinação:
+caso vc tome um golpe que iria zerar sua vida vc resiste com 1 de hp e essa skill entra em um tempo de recarga onde toda vez que você ficar com hp cheio a skill será zerada e poderá ser utilizada novamente.
+
+skill passiva.
+
+Tritões
+Imagem : https://mouneteria.netlify.app/img/a-tritao.webp
+-1 Força
++3 Destreza
++2 Eter
++1 Agilidade
+Arte de Tritões
+Tritões ganham +3 em Destreza, +2 Eter, +1 em agilidade, -1 em e força.
+Ganha 2 membros extras funcionais.
+Inicia com a habilidade: Flexível como a água.
+Flexível como a água:
+Passiva: sempre que estiver em chuva ou em um ambiente aquático seu status de agilidade aumenta em 1.5x.
+Ativa: Custa 1/2 de sua mana máxima em troca cria uma nuvem que vai cobrir a área de batalha por inteira e vai fazer chover durante os próximos 10 turnos.
+
+Demônio
+Imagem : https://mouneteria.netlify.app/img/a-demonio.webp
++2 Força
++2 Destreza
++2 Eter
++2 Intelecto
++2 Agilidade
++2 Vigor
+Arte de Demônio
+Demônios recebem +2 em todos os status.
+Demônios recebem 1.4x de dano adicional de dano Luz ou Divino.
+Iniciam com a habilidade: Corromper.
+Corromper skill ativa:
+vc aplica uma maldição a mente da pessoa que deixa ela com um status chamado “perverso” em alvos fracos, “perverso” faz o alvo ser manipulado para te ver como certo na historia e isso vai fazer com que ele reduza a força de seus golpes em 20 de dano físico.
+(Inicia custando 15 de Mana e a cada evolução da skill vai custa +50 de MP).
+Folego:1.
+Skill ativa.
+
+Vampiro
+Imagem: https://mouneteria.netlify.app/img/a-vampiro.webp
++2 Força
+-3 Destreza
++2 Eter
++2 Agilidade
++2 Vigor
+Arte de Vampiro
+Vampiros ganham +2 em Vigor e Eter, +2 em Agilidade e Força -3 Destreza.
+Toda vez que consumir sangue se cura em 6 de hp.
+Inicia com a habilidade: Hemocinese.
+Hemocinese:
+Pode-se controlar sangue de qualquer animal ou liquido que possua hemoglobina ou ferro para criar armas ou objetos feitos com sangue ou o liquido utilizado.
+Custo: 10 mana ativação.
+Folego:1.
+Skill ativa.
+
+(Dano caso faça uma arma: 40 de dano base + chance de causar hemorragia)
+(Hemorragia= 5% da vida atual do inimigo como dano verdadeiro).
+
+
+Hollow
+Imagem : https://mouneteria.netlify.app/img/a-hollow.webp
++1 Força
++1 Destreza
++1 Eter
++1 Intelecto
++1 Agilidade
++1 Vigor
+Arte de Hollow
+Hollows recebem a capacidade de aprender qualquer tipo de magia ou habilidade e recebem +1 em todos os status.
+Caso você chegue a 0 de Hp vc morre sem + nem -.
+inicia com a habilidade: Devorar.
+Devorar:
+Ao consumir carne ou uma quantidade significativa de material orgânico de um aliado ou inimigo consegue ganhar até +2 em seus status diretos baseado no que seu alvo era profissionalizado.
+
+Exemplo: Comer as pernas de um corredor ou a cabeça dele faz com que ganha de 1 até +2 em seus status de agilidade.
+
+
+Alquimista
+Imagem : https://mouneteria.netlify.app/img/a-alquimista.webp
++3 Força
+-1 Destreza
++3 Eter
+-1 Intelecto
+-1 Agilidade
++2 Vigor
+Arte de Alquimista
+Alquimistas ganham +3 em Força, Eter ,+2 Vigor -1 em todos os outros atributos.
+Tem uma cicatriz em qualquer parte do corpo (obrigatório)
+Inicia com a habilidade: Transmutação.
+Transmutação:
+Rode um dado de conhecimento (intelecto) para aprender um tipo novo de matéria, minério ou elemento.
+Após aprender esse novo tipo de minério ou afins pode se criar armas ou replicar o próprio minério em si em custo de seu hp.
+(Custo para ativação depende de qual minério ou elemento irá se utilizar e estará especificado no material).
+
+

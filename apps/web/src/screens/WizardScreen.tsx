@@ -179,7 +179,7 @@ function WizardForm({
       </header>
 
       {/* Conteúdo do Passo */}
-      <div style={{ maxWidth: '1080px', margin: '20px auto 0' }}>
+      <div style={{ maxWidth: '1280px', margin: '20px auto 0' }}>
         {passo === 0 && (
           <PassoIdentificacao
             draft={draft}
@@ -201,7 +201,7 @@ function WizardForm({
       </div>
 
       {/* Rodapé no estilo do OminiSheet */}
-      <div className="ed-foot" style={{ maxWidth: '1080px', margin: '40px auto 20px', borderTop: '1px solid rgba(255,255,255,.08)', paddingTop: '16px' }}>
+      <div className="ed-foot" style={{ maxWidth: '1280px', margin: '40px auto 20px', borderTop: '1px solid rgba(255,255,255,.08)', paddingTop: '16px' }}>
         <button type="button" className="btn subtle" onClick={handleBack}>
           {passo === 0 ? 'Descartar ficha' : '← Voltar para ' + PASSOS_NOMES[passo - 1]}
         </button>
