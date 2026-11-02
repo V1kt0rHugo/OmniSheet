@@ -1,6 +1,9 @@
+import { useState } from 'react';
 import type { FichaDraft, Sistema, Dados } from '../../types';
 import { descreverEfeito } from '../../lib/calculo';
 import { camposDe } from '../../lib/sistema';
+import { useApp } from '../../app/AppContext';
+import { sfx } from '../../lib/sfx';
 
 export interface PassoRacaProps {
   draft: FichaDraft;
@@ -32,7 +35,7 @@ const RACAS_DATA: Record<string, RacaInfo> = {
       folego: '1 Fôlego',
       cd: '3 turnos',
       descricao:
-        'Puxa o ar do pulmão e dispara uma rajada de fogo roxo: 30 dano mágico base + seu dano mágico. Aplica "Enfraquecimento" (-10 dano e -8 armadura por 1 turno).',
+        'Puxa todo o ar do pulmão e dispara uma rajada de fogo roxo: 30 dano mágico base + seu dano mágico. Causa "Enfraquecimento" (-10 dano e -8 armadura por 1 turno).',
     },
   },
   'Elfo': {
@@ -45,19 +48,19 @@ const RACAS_DATA: Record<string, RacaInfo> = {
       tipo: 'Passiva',
       custo: 'Passiva',
       descricao:
-        'Duplica o raio de acerto de todos os golpes à distância. Recursos mágicos gastos têm custo reduzido em 1.33x.',
+        'Passivamente duplica o raio de acerto de todos os golpes à distância. Gastos de recursos mágicos têm custo reduzido em 1.33x de Mana.',
     },
   },
   'Gigante': {
     imagem: 'https://mouneteria.netlify.app/img/a-gigante.webp',
-    passivas: ['Constituição colossal e alta resistência física.'],
+    passivas: ['Constituição colossal e alta resistência titânica.'],
     habilidadeInicial: {
       nome: 'Refletir',
       tipo: 'Ativa',
       custo: '20 Mana / pessoa',
       folego: '1 Fôlego',
       descricao:
-        'Esfera protetora em si e em até 3 aliados que absorve e protege 1/4 do dano total recebido durante 2 turnos.',
+        'Invoca esfera protetora envolta de si e de até 3 aliados que absorve 1/4 do dano total recebido durante 2 turnos.',
     },
   },
   'Humano': {
@@ -133,7 +136,7 @@ const RACAS_DATA: Record<string, RacaInfo> = {
       custo: '10 Mana',
       folego: '1 Fôlego',
       descricao:
-        'Molda armas com sangue/ferro: causam 40 dano base com chance de Hemorragia (5% do HP atual do alvo como dano verdadeiro).',
+        'Molda armas com sangue/ferro: causam 40 dano base com chance de Hemorragia (5% do HP atual como dano verdadeiro).',
     },
   },
   'Hollow': {
@@ -164,6 +167,9 @@ const RACAS_DATA: Record<string, RacaInfo> = {
 };
 
 export function PassoRaca({ draft, setDado, sistema }: PassoRacaProps) {
+  const { openModal, closeModal } = useApp();
+  const [hoveredRaca, setHoveredRaca] = useState<string | null>(null);
+
   const campos = camposDe(sistema);
   const campoRaca = campos.find((c) => c.id === 'raca' && c.tipo === 'selecao');
   const nomeDoCampo = Object.fromEntries(campos.map((c) => [c.id, c.label]));
@@ -175,217 +181,340 @@ export function PassoRaca({ draft, setDado, sistema }: PassoRacaProps) {
   const opcoes = campoRaca?.opcoes || Object.keys(RACAS_DATA);
 
   const selecionarRaca = (raca: string) => {
+    sfx('confirm');
     setDado('raca', raca);
+  };
+
+  const abrirModalDetalhes = (raca: string) => {
+    const extras = RACAS_DATA[raca];
+    const efeitos = campoRaca?.efeitos?.[raca] || [];
+
+    openModal(
+      <div className="mbox" style={{ width: 'min(540px, 95vw)', padding: '24px' }}>
+        {/* Banner no topo do modal */}
+        {extras?.imagem && (
+          <div
+            style={{
+              width: '100%',
+              height: '220px',
+              borderRadius: '10px',
+              overflow: 'hidden',
+              marginBottom: '16px',
+              background: '#04050a',
+              border: '1px solid rgba(255,255,255,0.1)',
+            }}
+          >
+            <img
+              src={extras.imagem}
+              alt={raca}
+              style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 20%' }}
+            />
+          </div>
+        )}
+
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '8px' }}>
+          <h3 style={{ margin: 0, fontFamily: 'var(--f-hk)', fontSize: '24px', color: 'var(--gold)' }}>
+            {raca}
+          </h3>
+          {racaSelecionada === raca && <span className="ed-sys">✓ Selecionada</span>}
+        </div>
+
+        {/* Status / Modificadores */}
+        {efeitos.length > 0 && (
+          <div style={{ margin: '10px 0' }}>
+            <span style={{ fontSize: '11px', letterSpacing: '0.08em', color: 'var(--text-dim)', textTransform: 'uppercase', display: 'block', marginBottom: '4px' }}>
+              Modificadores de Atributos
+            </span>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+              {efeitos.map((m, idx) => {
+                const isPos = m.valor > 0;
+                return (
+                  <span
+                    key={idx}
+                    className="chip"
+                    style={{
+                      borderColor: isPos ? 'rgba(127, 216, 166, 0.4)' : 'rgba(255, 157, 157, 0.4)',
+                      color: isPos ? '#7fd8a6' : '#ff9d9d',
+                      background: isPos ? 'rgba(127, 216, 166, 0.08)' : 'rgba(255, 157, 157, 0.08)',
+                      fontSize: '12px',
+                    }}
+                  >
+                    {descreverEfeito(m, nomeDoCampo[m.campo] ?? m.campo)}
+                  </span>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* Passivas */}
+        {extras?.passivas && extras.passivas.length > 0 && (
+          <div style={{ margin: '12px 0' }}>
+            <span style={{ fontSize: '11px', letterSpacing: '0.08em', color: 'var(--text-dim)', textTransform: 'uppercase', display: 'block', marginBottom: '4px' }}>
+              Características Raciais
+            </span>
+            {extras.passivas.map((p, idx) => (
+              <div key={idx} style={{ display: 'flex', gap: '6px', alignItems: 'baseline', fontSize: '13.5px', color: '#c3c9de', marginBottom: '4px' }}>
+                <span style={{ color: 'var(--gold)' }}>✦</span>
+                <span style={{ lineHeight: '1.4' }}>{p}</span>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Habilidade Inicial */}
+        {extras?.habilidadeInicial && (
+          <div className="carta" style={{ margin: '14px 0 6px', padding: '12px 14px', background: 'rgba(7,10,24,0.7)' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <b style={{ color: 'var(--gold)', fontSize: '14px' }}>{extras.habilidadeInicial.nome}</b>
+              <small style={{ color: 'var(--text-dim)', fontSize: '11px', textTransform: 'uppercase' }}>
+                {extras.habilidadeInicial.tipo}
+              </small>
+            </div>
+            <div style={{ display: 'flex', gap: '8px', margin: '4px 0 6px', fontSize: '12px', color: 'var(--text-dim)' }}>
+              <span style={{ color: 'var(--gold)' }}>{extras.habilidadeInicial.custo}</span>
+              {extras.habilidadeInicial.folego && <span>· {extras.habilidadeInicial.folego}</span>}
+              {extras.habilidadeInicial.cd && <span>· CD {extras.habilidadeInicial.cd}</span>}
+            </div>
+            <p style={{ margin: 0, fontSize: '13px', color: '#b9bfd4', lineHeight: '1.45' }}>
+              {extras.habilidadeInicial.descricao}
+            </p>
+          </div>
+        )}
+
+        {/* Botões do modal */}
+        <div className="mrow" style={{ marginTop: '20px' }}>
+          <button type="button" className="btn subtle" onClick={closeModal}>
+            Fechar
+          </button>
+          <button
+            type="button"
+            className="btn primary"
+            onClick={() => {
+              selecionarRaca(raca);
+              closeModal();
+            }}
+          >
+            {racaSelecionada === raca ? 'Já selecionada' : 'Selecionar ' + raca}
+          </button>
+        </div>
+      </div>
+    );
   };
 
   return (
     <div className="wiz-step-wrap">
       <div className="sys-wrap" style={{ maxWidth: '1280px', margin: '0 auto' }}>
-        <p className="sys-lead" style={{ maxWidth: '80ch', margin: '0 0 16px', fontSize: '14px' }}>
-          Escolha a ancestralidade ou raça do seu personagem. Cada raça altera atributos base,
-          confere características passivas e concede técnicas únicas de combate.
+        <p className="sys-lead" style={{ maxWidth: '80ch', margin: '0 0 20px', fontSize: '14px' }}>
+          Passe o mouse sobre os cards para ver detalhes completos ou escolher sua raça.
         </p>
 
-        {/* Grade de Raças Compacta */}
+        {/* Grade de Cards Verticais */}
         <div
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(285px, 1fr))',
-            gap: '14px',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))',
+            gap: '18px',
             alignItems: 'stretch',
           }}
         >
           {opcoes.map((opcao) => {
             const isSelected = racaSelecionada === opcao;
+            const isHovered = hoveredRaca === opcao;
             const extras = RACAS_DATA[opcao];
             const efeitos = campoRaca?.efeitos?.[opcao] || [];
+
+            // Resumo de status conciso (ex.: "+2 Força, -1 Destreza")
+            const statusResumo = efeitos
+              .map((m) => descreverEfeito(m, nomeDoCampo[m.campo] ?? m.campo))
+              .join(', ');
 
             return (
               <article
                 key={opcao}
-                className="sys-card"
-                onClick={() => selecionarRaca(opcao)}
+                onMouseEnter={() => setHoveredRaca(opcao)}
+                onMouseLeave={() => setHoveredRaca(null)}
                 style={{
-                  cursor: 'pointer',
-                  borderColor: isSelected ? 'var(--gold)' : 'rgba(255,255,255,0.12)',
-                  background: isSelected ? 'rgba(216,180,106,.08)' : 'rgba(10,12,24,.6)',
-                  boxShadow: isSelected
-                    ? '0 0 16px rgba(216,180,106,.25), inset 0 0 10px rgba(216,180,106,.08)'
-                    : 'none',
-                  transition: 'all 0.18s ease',
+                  position: 'relative',
                   display: 'flex',
                   flexDirection: 'column',
                   borderRadius: '12px',
                   overflow: 'hidden',
+                  background: '#070a18',
+                  border: isSelected
+                    ? '1.5px solid var(--gold)'
+                    : '1px solid rgba(255,255,255,0.12)',
+                  boxShadow: isSelected
+                    ? '0 0 20px rgba(216,180,106,0.35), inset 0 0 12px rgba(216,180,106,0.12)'
+                    : '0 4px 14px rgba(0,0,0,0.4)',
+                  transition: 'transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease',
+                  transform: isHovered ? 'translateY(-4px)' : 'none',
                 }}
               >
-                {/* Imagem Inteira Sem Cortar */}
-                {extras?.imagem && (
-                  <div
-                    style={{
-                      position: 'relative',
-                      width: '100%',
-                      height: '160px',
-                      background: 'radial-gradient(ellipse at 50% 50%, rgba(32,38,70,0.45) 0%, rgba(6,8,18,0.95) 100%)',
-                      borderBottom: '1px solid rgba(255,255,255,0.08)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      padding: '8px',
-                    }}
-                  >
+                {/* 1. Imagem que ocupa o topo/corpo principal do Card */}
+                <div
+                  style={{
+                    position: 'relative',
+                    width: '100%',
+                    height: '270px',
+                    overflow: 'hidden',
+                    background: '#03040a',
+                  }}
+                >
+                  {extras?.imagem && (
                     <img
                       src={extras.imagem}
                       alt={opcao}
                       style={{
-                        maxHeight: '100%',
-                        maxWidth: '100%',
-                        width: 'auto',
-                        height: 'auto',
-                        objectFit: 'contain',
-                        filter: 'drop-shadow(0 4px 10px rgba(0,0,0,0.65))',
-                        transition: 'transform 0.2s ease',
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover',
+                        objectPosition: 'center 15%',
+                        display: 'block',
                       }}
                     />
-                    {isSelected && (
-                      <span
-                        className="ed-sys"
-                        style={{
-                          position: 'absolute',
-                          top: '8px',
-                          right: '8px',
-                          background: 'rgba(10,12,24,0.9)',
-                          backdropFilter: 'blur(4px)',
-                          margin: 0,
-                          fontSize: '11px',
-                          padding: '1px 8px',
-                        }}
-                      >
-                        ✓ Selecionada
-                      </span>
-                    )}
-                  </div>
-                )}
+                  )}
 
-                {/* Conteúdo Informativo Compacto */}
+                  {/* Gradiente escuro sutil na base da imagem para fundir com a parte inferior */}
+                  <div
+                    style={{
+                      position: 'absolute',
+                      inset: 0,
+                      background:
+                        'linear-gradient(180deg, rgba(7,10,24,0) 55%, rgba(7,10,24,0.92) 100%)',
+                    }}
+                  />
+
+                  {/* Badge de Seleção no topo */}
+                  {isSelected && (
+                    <span
+                      className="ed-sys"
+                      style={{
+                        position: 'absolute',
+                        top: '10px',
+                        right: '10px',
+                        background: 'rgba(10,12,24,0.9)',
+                        backdropFilter: 'blur(4px)',
+                        margin: 0,
+                        fontSize: '11px',
+                        padding: '2px 8px',
+                      }}
+                    >
+                      ✓ Selecionada
+                    </span>
+                  )}
+                </div>
+
+                {/* 2. Informações na base do Card (Nome, Habilidade em Destaque, Status) */}
                 <div
                   style={{
                     padding: '12px 14px 14px',
-                    flex: 1,
+                    background: '#070a18',
                     display: 'flex',
                     flexDirection: 'column',
-                    gap: '8px',
+                    gap: '4px',
+                    flex: 1,
                   }}
                 >
-                  <header style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <h3
-                      style={{
-                        margin: 0,
-                        color: isSelected ? 'var(--gold)' : '#fff',
-                        fontSize: '17px',
-                        fontWeight: 600,
-                      }}
-                    >
-                      {opcao}
-                    </h3>
-                  </header>
+                  <h3
+                    style={{
+                      margin: 0,
+                      fontFamily: 'var(--f-hk)',
+                      fontSize: '18px',
+                      fontWeight: 600,
+                      color: isSelected ? 'var(--gold)' : '#ffffff',
+                      lineHeight: 1.2,
+                    }}
+                  >
+                    {opcao}
+                  </h3>
 
-                  {/* Modificadores de atributos compactos */}
-                  {efeitos.length > 0 && (
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
-                      {efeitos.map((m, idx) => {
-                        const isPos = m.valor > 0;
-                        return (
-                          <span
-                            key={idx}
-                            className="chip"
-                            style={{
-                              borderColor: isPos ? 'rgba(127, 216, 166, 0.4)' : 'rgba(255, 157, 157, 0.4)',
-                              color: isPos ? '#7fd8a6' : '#ff9d9d',
-                              background: isPos ? 'rgba(127, 216, 166, 0.08)' : 'rgba(255, 157, 157, 0.08)',
-                              fontSize: '11px',
-                              padding: '1px 6px',
-                              borderRadius: '4px',
-                            }}
-                          >
-                            {descreverEfeito(m, nomeDoCampo[m.campo] ?? m.campo)}
-                          </span>
-                        );
-                      })}
-                    </div>
-                  )}
-
-                  {/* Passivas */}
-                  {extras?.passivas && extras.passivas.length > 0 && (
-                    <div style={{ fontSize: '12px', color: '#c3c9de', display: 'flex', flexDirection: 'column', gap: '3px' }}>
-                      {extras.passivas.map((p, idx) => (
-                        <div key={idx} style={{ display: 'flex', gap: '5px', alignItems: 'baseline' }}>
-                          <span style={{ color: 'var(--gold)', fontSize: '10px' }}>✦</span>
-                          <span style={{ lineHeight: '1.35' }}>{p}</span>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-
-                  {/* Habilidade Inicial Compacta */}
+                  {/* Habilidade Destacada */}
                   {extras?.habilidadeInicial && (
-                    <div
-                      className="carta"
+                    <span
                       style={{
-                        marginTop: 'auto',
-                        padding: '8px 10px',
-                        background: 'rgba(7,10,24,0.6)',
-                        border: '1px solid rgba(255,255,255,0.08)',
-                        borderRadius: '8px',
+                        fontSize: '11px',
+                        fontWeight: 600,
+                        letterSpacing: '0.06em',
+                        color: '#93c5fd', // tom azulado suave como na imagem de referência
+                        textTransform: 'uppercase',
+                        margin: '2px 0',
                       }}
                     >
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <b style={{ color: 'var(--gold)', fontSize: '12.5px' }}>
-                          {extras.habilidadeInicial.nome}
-                        </b>
-                        <small style={{ color: 'var(--text-dim)', fontSize: '10.5px', textTransform: 'uppercase' }}>
-                          {extras.habilidadeInicial.tipo}
-                        </small>
-                      </div>
-
-                      <div
-                        style={{
-                          display: 'flex',
-                          gap: '6px',
-                          alignItems: 'center',
-                          margin: '3px 0 4px',
-                          fontSize: '11px',
-                          color: 'var(--text-dim)',
-                          flexWrap: 'wrap',
-                        }}
-                      >
-                        <span style={{ color: 'var(--gold)' }}>{extras.habilidadeInicial.custo}</span>
-                        {extras.habilidadeInicial.folego && (
-                          <>
-                            <span>·</span>
-                            <span>{extras.habilidadeInicial.folego}</span>
-                          </>
-                        )}
-                        {extras.habilidadeInicial.cd && (
-                          <>
-                            <span>·</span>
-                            <span>CD {extras.habilidadeInicial.cd}</span>
-                          </>
-                        )}
-                      </div>
-
-                      <p style={{ margin: 0, fontSize: '11.5px', color: '#b9bfd4', lineHeight: '1.4' }}>
-                        {extras.habilidadeInicial.descricao}
-                      </p>
-                    </div>
+                      {extras.habilidadeInicial.nome}
+                    </span>
                   )}
 
-                  <div style={{ marginTop: '6px', paddingTop: '6px', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
-                    <small style={{ color: isSelected ? 'var(--gold)' : 'var(--text-dim)', fontSize: '11.5px' }}>
-                      {isSelected ? '✓ Selecionada' : 'Clique para selecionar'}
-                    </small>
+                  {/* Status Extras Resumidos */}
+                  <div
+                    style={{
+                      fontSize: '12px',
+                      color: '#a1a7be',
+                      lineHeight: 1.35,
+                    }}
+                  >
+                    {statusResumo || 'Sem modificadores'}
                   </div>
                 </div>
+
+                {/* 3. Hover Overlay com as 2 opções: "Ver detalhes" e "Selecionar" */}
+                {isHovered && (
+                  <div
+                    style={{
+                      position: 'absolute',
+                      inset: 0,
+                      background: 'rgba(4, 5, 14, 0.85)',
+                      backdropFilter: 'blur(3px)',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '12px',
+                      padding: '20px',
+                      zIndex: 10,
+                      animation: 'fadeIn 0.15s ease',
+                    }}
+                  >
+                    <button
+                      type="button"
+                      className="btn subtle"
+                      style={{
+                        width: '100%',
+                        padding: '10px 14px',
+                        borderRadius: '8px',
+                        fontSize: '13px',
+                        fontWeight: 500,
+                        border: '1px solid rgba(255,255,255,0.2)',
+                        textAlign: 'center',
+                      }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        abrirModalDetalhes(opcao);
+                      }}
+                    >
+                      Ver detalhes
+                    </button>
+
+                    <button
+                      type="button"
+                      className="btn primary"
+                      style={{
+                        width: '100%',
+                        padding: '10px 14px',
+                        borderRadius: '8px',
+                        fontSize: '13px',
+                        fontWeight: 600,
+                        textAlign: 'center',
+                      }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        selecionarRaca(opcao);
+                      }}
+                    >
+                      {isSelected ? '✓ Selecionada' : 'Selecionar'}
+                    </button>
+                  </div>
+                )}
               </article>
             );
           })}
