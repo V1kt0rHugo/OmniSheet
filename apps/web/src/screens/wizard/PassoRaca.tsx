@@ -32,7 +32,7 @@ const RACAS_DATA: Record<string, RacaInfo> = {
       folego: '1 Fôlego',
       cd: '3 turnos',
       descricao:
-        'Puxa o ar do pulmão e dispara uma rajada de fogo roxo: causa 30 dano mágico base + seu dano mágico e aplica "Enfraquecimento" (-10 dano e -8 armadura por 1 turno).',
+        'Puxa o ar do pulmão e dispara uma rajada de fogo roxo: 30 dano mágico base + seu dano mágico. Aplica "Enfraquecimento" (-10 dano e -8 armadura por 1 turno).',
     },
   },
   'Elfo': {
@@ -45,19 +45,19 @@ const RACAS_DATA: Record<string, RacaInfo> = {
       tipo: 'Passiva',
       custo: 'Passiva',
       descricao:
-        'Passivamente duplica o raio de acerto de todos os golpes à distância. Gastos de recursos mágicos são reduzidos em 1.33x do custo de Mana.',
+        'Duplica o raio de acerto de todos os golpes à distância. Recursos mágicos gastos têm custo reduzido em 1.33x.',
     },
   },
   'Gigante': {
     imagem: 'https://mouneteria.netlify.app/img/a-gigante.webp',
-    passivas: ['Resistência titânica e constituição imensa.'],
+    passivas: ['Constituição colossal e alta resistência física.'],
     habilidadeInicial: {
       nome: 'Refletir',
       tipo: 'Ativa',
       custo: '20 Mana / pessoa',
       folego: '1 Fôlego',
       descricao:
-        'Invoca uma esfera protetora envolta de si e de até 3 aliados que absorve e protege 1/4 do dano total recebido durante 2 turnos.',
+        'Esfera protetora em si e em até 3 aliados que absorve e protege 1/4 do dano total recebido durante 2 turnos.',
     },
   },
   'Humano': {
@@ -69,7 +69,7 @@ const RACAS_DATA: Record<string, RacaInfo> = {
       custo: '15 HP',
       folego: '0 Fôlego',
       descricao:
-        'Entra em epifania mental: qualquer rolagem de dado de estratégia ou intelecto recebe um buff de +8 adicional pelos próximos 3 dados.',
+        'Epifania mental: rolagens de estratégia ou intelecto recebem buff de +8 adicional pelos próximos 3 dados.',
     },
   },
   'Goblin': {
@@ -81,7 +81,7 @@ const RACAS_DATA: Record<string, RacaInfo> = {
       custo: '15 Mana',
       folego: '1 Fôlego',
       descricao:
-        'Surrupia magicamente um item aleatório do alvo. Quanto maior o dado rolado, mais valioso e raro é o item roubado (Dado base: d20+2).',
+        'Surrupia magicamente um item aleatório do alvo. Quanto maior o dado rolado, mais valioso o item (Dado base: d20+2).',
     },
   },
   'Prisioneiro': {
@@ -92,7 +92,7 @@ const RACAS_DATA: Record<string, RacaInfo> = {
       tipo: 'Passiva',
       custo: 'Passiva',
       descricao:
-        'Ao receber um golpe fatal que zeraria sua vida, você resiste com 1 de HP. A técnica recarrega e pode ser usada novamente assim que o HP for restaurado ao máximo.',
+        'Ao sofrer golpe fatal que zeraria sua vida, resiste com 1 de HP. Recarrega assim que a vida for restaurada ao máximo.',
     },
   },
   'Tritões': {
@@ -104,24 +104,24 @@ const RACAS_DATA: Record<string, RacaInfo> = {
     habilidadeInicial: {
       nome: 'Flexível como a Água',
       tipo: 'Ativa',
-      custo: 'Metade da Mana máxima',
+      custo: 'Metade da Mana máx.',
       descricao:
-        'Cria uma densa tempestade que cobre a arena de batalha por inteiro, fazendo chover pelos próximos 10 turnos (ativando seus bônus aquáticos).',
+        'Cria densa tempestade na arena por 10 turnos, ativando seus bônus de combate aquático.',
     },
   },
   'Demônio': {
     imagem: 'https://mouneteria.netlify.app/img/a-demonio.webp',
     passivas: [
       'Bônus de +2 em todos os atributos.',
-      'Vulnerabilidade: Sofre 1.4x de dano adicional contra fontes de Luz ou Divino.',
+      'Vulnerabilidade: Sofre 1.4x de dano adicional contra Luz ou Divino.',
     ],
     habilidadeInicial: {
       nome: 'Corromper',
       tipo: 'Ativa',
-      custo: '15 Mana (+50 MP / nível)',
+      custo: '15 Mana (+50 MP/lvl)',
       folego: '1 Fôlego',
       descricao:
-        'Aplica "Perverso" na mente de alvos fracos, manipulando-os para te verem como aliado e reduzindo a força dos golpes deles em 20 de dano físico.',
+        'Aplica "Perverso" em alvos fracos, manipulando-os para te verem como aliado e reduzindo seus ataques em 20 de dano físico.',
     },
   },
   'Vampiro': {
@@ -133,32 +133,32 @@ const RACAS_DATA: Record<string, RacaInfo> = {
       custo: '10 Mana',
       folego: '1 Fôlego',
       descricao:
-        'Manipula sangue ou ferro líquido para moldar armas ou constructos. Armas causam 40 dano base com chance de causar Hemorragia (5% do HP atual como dano verdadeiro).',
+        'Molda armas com sangue/ferro: causam 40 dano base com chance de Hemorragia (5% do HP atual do alvo como dano verdadeiro).',
     },
   },
   'Hollow': {
     imagem: 'https://mouneteria.netlify.app/img/a-hollow.webp',
     passivas: [
-      'Capacidade de aprender qualquer magia ou habilidade do jogo.',
-      'Fragilidade Existencial: Se chegar a 0 de HP, morre imediatamente sem testes de agonia.',
+      'Aprende qualquer magia ou habilidade.',
+      'Fragilidade Existencial: Ao chegar a 0 de HP, morre imediatamente sem agonia.',
     ],
     habilidadeInicial: {
       nome: 'Devorar',
       tipo: 'Ativa',
       custo: 'Carne orgânica',
       descricao:
-        'Ao consumir material orgânico significativo de um aliado ou inimigo, absorve de +1 a +2 no atributo principal da especialidade do alvo.',
+        'Ao consumir matéria orgânica de um aliado ou inimigo, absorve +1 a +2 no atributo principal da especialidade do alvo.',
     },
   },
   'Alquimista': {
     imagem: 'https://mouneteria.netlify.app/img/a-alquimista.webp',
-    passivas: ['Carrega uma cicatriz obrigatória em alguma parte do corpo.'],
+    passivas: ['Carrega uma cicatriz obrigatória visível no corpo.'],
     habilidadeInicial: {
       nome: 'Transmutação',
       tipo: 'Ativa',
-      custo: 'Custo de HP variável',
+      custo: 'HP variável',
       descricao:
-        'Role conhecimento (Intelecto) para sintetizar uma nova matéria, minério ou elemento. Uma vez aprendido, permite replicar a matéria ou criar armas.',
+        'Role Intelecto para aprender novas matérias ou minérios. Uma vez aprendido, replica a matéria ou forja armas à custa de HP.',
     },
   },
 };
@@ -180,18 +180,18 @@ export function PassoRaca({ draft, setDado, sistema }: PassoRacaProps) {
 
   return (
     <div className="wiz-step-wrap">
-      <div className="sys-wrap" style={{ maxWidth: '1180px', margin: '0 auto' }}>
-        <p className="sys-lead" style={{ maxWidth: '80ch', margin: '0 0 20px' }}>
+      <div className="sys-wrap" style={{ maxWidth: '1280px', margin: '0 auto' }}>
+        <p className="sys-lead" style={{ maxWidth: '80ch', margin: '0 0 16px', fontSize: '14px' }}>
           Escolha a ancestralidade ou raça do seu personagem. Cada raça altera atributos base,
           confere características passivas e concede técnicas únicas de combate.
         </p>
 
-        {/* Grade de Raças Fluida */}
+        {/* Grade de Raças Compacta */}
         <div
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))',
-            gap: '20px',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(285px, 1fr))',
+            gap: '14px',
             alignItems: 'stretch',
           }}
         >
@@ -208,44 +208,43 @@ export function PassoRaca({ draft, setDado, sistema }: PassoRacaProps) {
                 style={{
                   cursor: 'pointer',
                   borderColor: isSelected ? 'var(--gold)' : 'rgba(255,255,255,0.12)',
-                  background: isSelected ? 'rgba(216,180,106,.09)' : 'rgba(10,12,24,.6)',
+                  background: isSelected ? 'rgba(216,180,106,.08)' : 'rgba(10,12,24,.6)',
                   boxShadow: isSelected
-                    ? '0 0 18px rgba(216,180,106,.25), inset 0 0 12px rgba(216,180,106,.1)'
+                    ? '0 0 16px rgba(216,180,106,.25), inset 0 0 10px rgba(216,180,106,.08)'
                     : 'none',
-                  transition: 'all 0.2s ease',
+                  transition: 'all 0.18s ease',
                   display: 'flex',
                   flexDirection: 'column',
+                  borderRadius: '12px',
+                  overflow: 'hidden',
                 }}
               >
-                {/* Ilustração da Raça tipo Banner */}
+                {/* Imagem Inteira Sem Cortar */}
                 {extras?.imagem && (
                   <div
                     style={{
                       position: 'relative',
                       width: '100%',
-                      height: '180px',
-                      overflow: 'hidden',
-                      background: '#04050a',
+                      height: '160px',
+                      background: 'radial-gradient(ellipse at 50% 50%, rgba(32,38,70,0.45) 0%, rgba(6,8,18,0.95) 100%)',
                       borderBottom: '1px solid rgba(255,255,255,0.08)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      padding: '8px',
                     }}
                   >
                     <img
                       src={extras.imagem}
                       alt={opcao}
                       style={{
-                        width: '100%',
-                        height: '100%',
-                        objectFit: 'cover',
-                        objectPosition: 'center 20%',
-                        transition: 'transform 0.3s ease',
-                      }}
-                    />
-                    <div
-                      style={{
-                        position: 'absolute',
-                        inset: 0,
-                        background:
-                          'linear-gradient(180deg, rgba(7,10,24,0) 50%, rgba(7,10,24,0.9) 100%)',
+                        maxHeight: '100%',
+                        maxWidth: '100%',
+                        width: 'auto',
+                        height: 'auto',
+                        objectFit: 'contain',
+                        filter: 'drop-shadow(0 4px 10px rgba(0,0,0,0.65))',
+                        transition: 'transform 0.2s ease',
                       }}
                     />
                     {isSelected && (
@@ -253,11 +252,13 @@ export function PassoRaca({ draft, setDado, sistema }: PassoRacaProps) {
                         className="ed-sys"
                         style={{
                           position: 'absolute',
-                          top: '12px',
-                          right: '12px',
-                          background: 'rgba(10,12,24,0.85)',
+                          top: '8px',
+                          right: '8px',
+                          background: 'rgba(10,12,24,0.9)',
                           backdropFilter: 'blur(4px)',
                           margin: 0,
+                          fontSize: '11px',
+                          padding: '1px 8px',
                         }}
                       >
                         ✓ Selecionada
@@ -266,16 +267,32 @@ export function PassoRaca({ draft, setDado, sistema }: PassoRacaProps) {
                   </div>
                 )}
 
-                <div className="sys-pick" style={{ padding: '16px 18px 18px', flex: 1, display: 'flex', flexDirection: 'column' }}>
-                  <header style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
-                    <h3 style={{ margin: 0, color: isSelected ? 'var(--gold)' : '#fff', fontSize: '20px' }}>
+                {/* Conteúdo Informativo Compacto */}
+                <div
+                  style={{
+                    padding: '12px 14px 14px',
+                    flex: 1,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '8px',
+                  }}
+                >
+                  <header style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <h3
+                      style={{
+                        margin: 0,
+                        color: isSelected ? 'var(--gold)' : '#fff',
+                        fontSize: '17px',
+                        fontWeight: 600,
+                      }}
+                    >
                       {opcao}
                     </h3>
                   </header>
 
-                  {/* Modificadores de atributos com cores de bônus / penalidade */}
+                  {/* Modificadores de atributos compactos */}
                   {efeitos.length > 0 && (
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '12px' }}>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
                       {efeitos.map((m, idx) => {
                         const isPos = m.valor > 0;
                         return (
@@ -286,8 +303,9 @@ export function PassoRaca({ draft, setDado, sistema }: PassoRacaProps) {
                               borderColor: isPos ? 'rgba(127, 216, 166, 0.4)' : 'rgba(255, 157, 157, 0.4)',
                               color: isPos ? '#7fd8a6' : '#ff9d9d',
                               background: isPos ? 'rgba(127, 216, 166, 0.08)' : 'rgba(255, 157, 157, 0.08)',
-                              fontSize: '12px',
-                              padding: '2px 8px',
+                              fontSize: '11px',
+                              padding: '1px 6px',
+                              borderRadius: '4px',
                             }}
                           >
                             {descreverEfeito(m, nomeDoCampo[m.campo] ?? m.campo)}
@@ -297,34 +315,35 @@ export function PassoRaca({ draft, setDado, sistema }: PassoRacaProps) {
                     </div>
                   )}
 
-                  {/* Características Passivas */}
+                  {/* Passivas */}
                   {extras?.passivas && extras.passivas.length > 0 && (
-                    <div style={{ marginBottom: '12px', fontSize: '13px', color: '#c3c9de', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                    <div style={{ fontSize: '12px', color: '#c3c9de', display: 'flex', flexDirection: 'column', gap: '3px' }}>
                       {extras.passivas.map((p, idx) => (
-                        <div key={idx} style={{ display: 'flex', gap: '6px', alignItems: 'baseline' }}>
-                          <span style={{ color: 'var(--gold)', fontSize: '11px' }}>✦</span>
-                          <span style={{ lineHeight: '1.4' }}>{p}</span>
+                        <div key={idx} style={{ display: 'flex', gap: '5px', alignItems: 'baseline' }}>
+                          <span style={{ color: 'var(--gold)', fontSize: '10px' }}>✦</span>
+                          <span style={{ lineHeight: '1.35' }}>{p}</span>
                         </div>
                       ))}
                     </div>
                   )}
 
-                  {/* Habilidade Inicial */}
+                  {/* Habilidade Inicial Compacta */}
                   {extras?.habilidadeInicial && (
                     <div
                       className="carta"
                       style={{
                         marginTop: 'auto',
-                        padding: '10px 14px',
-                        background: 'rgba(7,10,24,0.65)',
-                        border: '1px solid rgba(255,255,255,0.09)',
+                        padding: '8px 10px',
+                        background: 'rgba(7,10,24,0.6)',
+                        border: '1px solid rgba(255,255,255,0.08)',
+                        borderRadius: '8px',
                       }}
                     >
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <b style={{ color: 'var(--gold)', fontSize: '13.5px' }}>
+                        <b style={{ color: 'var(--gold)', fontSize: '12.5px' }}>
                           {extras.habilidadeInicial.nome}
                         </b>
-                        <small style={{ color: 'var(--text-dim)', fontSize: '11.5px', textTransform: 'uppercase' }}>
+                        <small style={{ color: 'var(--text-dim)', fontSize: '10.5px', textTransform: 'uppercase' }}>
                           {extras.habilidadeInicial.tipo}
                         </small>
                       </div>
@@ -334,8 +353,8 @@ export function PassoRaca({ draft, setDado, sistema }: PassoRacaProps) {
                           display: 'flex',
                           gap: '6px',
                           alignItems: 'center',
-                          margin: '4px 0 6px',
-                          fontSize: '11.5px',
+                          margin: '3px 0 4px',
+                          fontSize: '11px',
                           color: 'var(--text-dim)',
                           flexWrap: 'wrap',
                         }}
@@ -355,15 +374,15 @@ export function PassoRaca({ draft, setDado, sistema }: PassoRacaProps) {
                         )}
                       </div>
 
-                      <p style={{ margin: 0, fontSize: '12px', color: '#b9bfd4', lineHeight: '1.45' }}>
+                      <p style={{ margin: 0, fontSize: '11.5px', color: '#b9bfd4', lineHeight: '1.4' }}>
                         {extras.habilidadeInicial.descricao}
                       </p>
                     </div>
                   )}
 
-                  <div style={{ marginTop: '14px', paddingTop: '8px', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
-                    <small style={{ color: isSelected ? 'var(--gold)' : 'var(--text-dim)', fontSize: '12px' }}>
-                      {isSelected ? '✓ Raça escolhida para a ficha' : 'Clique para selecionar'}
+                  <div style={{ marginTop: '6px', paddingTop: '6px', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+                    <small style={{ color: isSelected ? 'var(--gold)' : 'var(--text-dim)', fontSize: '11.5px' }}>
+                      {isSelected ? '✓ Selecionada' : 'Clique para selecionar'}
                     </small>
                   </div>
                 </div>
