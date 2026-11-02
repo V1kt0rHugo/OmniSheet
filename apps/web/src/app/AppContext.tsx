@@ -1,7 +1,7 @@
 import { createContext, useContext, type ReactNode } from 'react';
 import type { Ficha, Sistema } from '../types';
 
-export type ScreenId = 'title' | 'menu' | 'hall' | 'systems' | 'editor' | 'sheet';
+export type ScreenId = 'title' | 'menu' | 'hall' | 'systems' | 'editor' | 'sheet' | 'wizard';
 export type MenuPhase = 'off' | 'lit' | 'risen';
 export type Origem = 'hall' | 'menu';
 export interface ShowOpts { instant?: boolean; assemble?: boolean }
@@ -23,6 +23,8 @@ export interface AppApi {
   openSheet: (id: string, o?: { instant?: boolean }) => void;
   /** Primeira etapa de criar uma ficha: escolher o sistema. */
   openSystemPicker: (o?: { from?: Origem; instant?: boolean }) => void;
+  /** Segunda etapa: abre o wizard de criação de ficha para o sistema escolhido. */
+  openWizard: (sistemaId: string, opts?: { from?: Origem }) => void;
   enterMenu: () => Promise<void>;
   setBlackout: (on: boolean) => void;
   toast: (msg: string) => void;

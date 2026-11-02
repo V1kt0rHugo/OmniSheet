@@ -4,7 +4,7 @@ import { sfx } from '../lib/sfx';
 
 /** Primeira etapa de criar uma ficha: escolher o sistema . */
 export function SystemPickerScreen({ from }: { from: Origem }) {
-  const { sistemas, fichas, screen, instant, show, openEditor } = useApp();
+  const { sistemas, fichas, screen, instant, show, openWizard } = useApp();
 
   const back = () => {
     sfx('cancel');
@@ -28,7 +28,7 @@ export function SystemPickerScreen({ from }: { from: Origem }) {
               const usos = fichas.filter((f) => f.sistemaId === s.id).length;
               return (
                 <article className="sys-card" key={s.id}>
-                  <button className="sys-pick" onClick={() => { sfx('confirm'); openEditor(null, { from, sistemaId: s.id }); }}>
+                  <button className="sys-pick" onClick={() => { sfx('confirm'); openWizard(s.id, { from }); }}>
                     <h3>{s.nome}</h3>
                     <p>{s.descricao || 'Sem descrição.'}</p>
                     <small>{camposDe(s).length} campos · {usos} {usos === 1 ? 'ficha' : 'fichas'}</small>

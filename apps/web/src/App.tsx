@@ -8,6 +8,7 @@ import { HallScreen } from './screens/HallScreen';
 import { EditorScreen, type EditorSession } from './screens/EditorScreen';
 import { SheetScreen } from './screens/SheetScreen';
 import { SystemPickerScreen } from './screens/SystemPickerScreen';
+import { WizardScreen, type WizardSession } from './screens/WizardScreen';
 import { sfx } from './lib/sfx';
 import { reduceMotion, wait } from './lib/util';
 import type { Ficha, Sistema } from './types';
@@ -43,6 +44,7 @@ export function App() {
   const [editor, setEditor] = useState<EditorSession | null>(null);
   const [sheetId, setSheetId] = useState<string | null>(null);
   const [pickerFrom, setPickerFrom] = useState<Origem>('hall');
+  const [wizardSession, setWizardSession] = useState<WizardSession | null>(null);
   const [toastMsg, setToastMsg] = useState('');
   const [toastOn, setToastOn] = useState(false);
   const [modal, setModal] = useState<ModalState | null>(null);
@@ -50,6 +52,7 @@ export function App() {
   modalRef.current = modal;
   const toastTimer = useRef<number>();
   const editorKey = useRef(0);
+  const wizardKey = useRef(0);
 
   const show = useCallback((id: ScreenId, { instant: inst = false, assemble = false }: ShowOpts = {}) => {
     setInstant(inst);
@@ -103,6 +106,11 @@ export function App() {
     show('sheet', { instant: inst });
   }, [show]);
 
+  const openWizard = useCallback((sistemaId: string, opts?: { from?: Origem }) => {
+    setWizardSession({ sistemaId, from: opts?.from ?? 'hall', key: ++wizardKey.current });
+    show('wizard');
+  }, [show]);
+
   const enterMenu = useCallback(async () => {
     setMenuPhase('off');
     await wait(80);
@@ -116,9 +124,9 @@ export function App() {
 
   const api = useMemo<AppApi>(() => ({
     fichas, sistemas, sistemaPorId: (id) => sistemasRef.current.find((x) => x.id === id), screen, instant, assembleToken, menuPhase, setMenuPhase, show,
-    openEditor, openSheet, openSystemPicker, enterMenu,
+    openEditor, openSheet, openSystemPicker, openWizard, enterMenu,
     setBlackout, toast, openModal, closeModal, isModalOpen: () => modalRef.current != null, confirm,
-  }), [fichas, sistemas, screen, instant, assembleToken, menuPhase, show, openEditor, openSheet, openSystemPicker, enterMenu, toast, openModal, closeModal, confirm]);
+  }), [fichas, sistemas, screen, instant, assembleToken, menuPhase, show, openEditor, openSheet, openSystemPicker, openWizard, enterMenu, toast, openModal, closeModal, confirm]);
 
   return (
     <AppContext.Provider value={api}>
@@ -129,6 +137,7 @@ export function App() {
         <SystemPickerScreen from={pickerFrom} />
         <EditorScreen session={editor} />
         <SheetScreen id={sheetId} />
+        <WizardScreen session={wizardSession} />
 
         <div id="fx" />
         <div id="blackout" className={blackout ? 'on' : ''} />
